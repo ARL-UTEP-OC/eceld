@@ -23,6 +23,8 @@ def execute_tshark_test():
     engine.stop_collector(c)
     logging.debug("Engine_invoker: parsing data")
     engine.parser(c)
+    logging.debug("Engine_invoker: exporting data")
+    engine.export('/root/Desktop/')
     logging.debug("Engine_invoker: Complete. Exiting")
 
 def execute_pykeylogger_test():
@@ -44,6 +46,8 @@ def execute_pykeylogger_test():
     engine.stop_collector(c)
     logging.debug("Engine_invoker: parsing data")
     engine.parser(c)
+    logging.debug("Engine_invoker: exporting data")
+    engine.export('/root/Desktop/')
     logging.debug("Engine_invoker: Complete. Exiting")
 
 def execute_nmap_test():
@@ -65,6 +69,8 @@ def execute_nmap_test():
     engine.stop_collector(c)
     logging.debug("Engine_invoker: parsing data")
     engine.parser(c)
+    logging.debug("Engine_invoker: exporting data")
+    engine.export('/root/Desktop/')
     logging.debug("Engine_invoker: Complete. Exiting")
 
 def execute_manualscreenshot_test():
@@ -86,6 +92,8 @@ def execute_manualscreenshot_test():
     engine.stop_collector(c)
     logging.debug("Engine_invoker: parsing data")
     engine.parser(c)
+    logging.debug("Engine_invoker: exporting data")
+    engine.export('/root/Desktop/')
     logging.debug("Engine_invoker: Complete. Exiting")
 
 def execute_snoopy_test():
@@ -107,11 +115,13 @@ def execute_snoopy_test():
     engine.stop_collector(c)
     logging.debug("Engine_invoker: parsing data")
     engine.parser(c)
+    logging.debug("Engine_invoker: exporting data")
+    engine.export('/root/Desktop/')
     logging.debug("Engine_invoker: Complete. Exiting")
 
 if __name__ == "__main__":
     execute_tshark_test()
     execute_pykeylogger_test()
     execute_nmap_test()
-    execute_manualscreenshot_test()
+    #execute_manualscreenshot_test()
     execute_snoopy_test()
