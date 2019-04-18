@@ -74,3 +74,6 @@ http://www.autopy.org/documentation/api-reference/bitmap.html
 
 The collector is a manual plugin that is executed by clickin on the context menu of the ECEL status icon. A dialog window will collect metadata and then take a screenshot using the autopy module.
 With the parser plugin, all of the stored metadata is then formatted and stored in a JSON file.
+# eceld
+# eceld
+# eceld
