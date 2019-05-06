@@ -17,10 +17,6 @@ def execute_tshark_test():
     c = engine.get_collector("tshark")
     logging.debug("Engine_invoker: starting collector")
     engine.start_collector(c)
-    logging.debug("Engine_invoker: waiting 5 seconds")
-    time.sleep(5)
-    logging.debug("Engine_invoker: stopping collector")
-    engine.stop_collector(c)
 
 def execute_pykeylogger_test():
     logging.getLogger().setLevel(logging.DEBUG)
@@ -35,10 +31,6 @@ def execute_pykeylogger_test():
     c = engine.get_collector("pykeylogger")
     logging.debug("Engine_invoker: starting collector")
     engine.start_collector(c)
-    logging.debug("Engine_invoker: waiting 5 seconds")
-    time.sleep(5)
-    logging.debug("Engine_invoker: stopping collector")
-    engine.stop_collector(c)
 
 def execute_nmap_test():
     logging.getLogger().setLevel(logging.DEBUG)
@@ -53,10 +45,6 @@ def execute_nmap_test():
     c = engine.get_collector("nmap")
     logging.debug("Engine_invoker: starting collector")
     engine.start_collector(c)
-    logging.debug("Engine_invoker: waiting 5 seconds")
-    time.sleep(5)
-    logging.debug("Engine_invoker: stopping collector")
-    engine.stop_collector(c)
 
 def execute_manualscreenshot_test():
     logging.getLogger().setLevel(logging.DEBUG)
@@ -71,10 +59,6 @@ def execute_manualscreenshot_test():
     c = engine.get_collector("manualscreenshot")
     logging.debug("Engine_invoker: starting collector")
     engine.start_collector(c)
-    logging.debug("Engine_invoker: waiting 5 seconds")
-    time.sleep(5)
-    logging.debug("Engine_invoker: stopping collector")
-    engine.stop_collector(c)
 
 def execute_snoopy_test():
     logging.getLogger().setLevel(logging.DEBUG)
@@ -89,25 +73,10 @@ def execute_snoopy_test():
     c = engine.get_collector("snoopy")
     logging.debug("Engine_invoker: starting collector")
     engine.start_collector(c)
-    logging.debug("Engine_invoker: waiting 5 seconds")
-    time.sleep(5)
-    logging.debug("Engine_invoker: stopping collector")
-    engine.stop_collector(c)
-    
-def parse_and_export():
-	engine = Engine()
-	c = engine.get_all_collectors()
-	logging.debug("Engine_invoker: parsing data")
-	engine.parse_all_collectors_data()
-	logging.debug("Engine_invoker: exporting data")
-	engine.export('/root/Desktop/')
-	logging.debug("Engine_invoker: Complete. Exiting")
-
 
 if __name__ == "__main__":
-	execute_tshark_test()
-	execute_pykeylogger_test()
-	execute_nmap_test()
-	#execute_manualscreenshot_test()
-	execute_snoopy_test()
-	parse_and_export()
+    execute_tshark_test()
+    execute_pykeylogger_test()
+    execute_nmap_test()
+    #execute_manualscreenshot_test()
+    execute_snoopy_test()
