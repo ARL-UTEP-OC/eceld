@@ -138,8 +138,8 @@ chmod +x "$AUTOSTART_DIR"/ecel.desktop
 ### Configuring eceld to run as a service
 #
 # Modify the installation directory variable on ECELService.sh
-__INST_DIR="${ECEL_DIR//\/\\//\}"
-sed -i -e "s/__INSTALLATION_DIRECTORY__/DIR=${__INST_DIR}/" ECELService.sh
+__INST_DIR="${ECEL_DIR//\//\\/}"
+sed -i -e "s/__INSTALLATION_DIRECTORY__/DIR=${__INST_DIR}/" ECELservice.sh
 
 # Turn ecel_service into an executable
 chmod 755 ecel_service.py
@@ -158,6 +158,3 @@ ls -l /etc/rc?.d/*ECELservice.sh
 
 # View the ECEL Service
 /etc/init.d/ECELservice.sh status
-
-
-echo "$OUTPUT_PREFIX Installation Complete"
