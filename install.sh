@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-ECEL_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+ECEL_DIR="$(cd "$(dirname "${BASH_SOURCE[${__b3bp_tmp_source_idx:-0}]}")" && pwd)"
 
 OUTPUT_PREFIX="ECEL INSTALLER:"
 OUTPUT_ERROR_PREFIX="$OUTPUT_PREFIX ERROR:"
@@ -94,9 +94,7 @@ find ./ -name "*.sh" -exec chmod +x {}  \;
 echo "$OUTPUT_PREFIX Creating executables"
 cat > "$ECEL_DIR"/ecel-gui <<-'EOFecelgui'
 	#!/bin/bash
-
 	ECEL_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-
 	if [ "$EUID" -ne 0 ]; then
 		echo "ECEL must be run as root"
 		exit 1
@@ -109,6 +107,7 @@ chmod +x "$ECEL_DIR"/ecel-gui
 if prompt_accepted_Yn "The Top-Icons gnome extension will place the ECEL icon in your status bar. Install?"; then
     bash "$ECEL_DIR"/scripts/gnome-shell-extensions-installer/gnome-shell-extension-installer 495 --restart-shell --yes
 fi
+
 
 ### Configure to run on boot
 #
@@ -135,5 +134,30 @@ X-GNOME-Autostart-enabled=${AUTOSTART_ENABLED_VAL}
 EOF
 cp "$ECEL_DIR"/scripts/ecel.desktop "$AUTOSTART_DIR"
 chmod +x "$AUTOSTART_DIR"/ecel.desktop
+
+### Configuring eceld to run as a service
+#
+# Modify the installation directory variable on ECELService.sh
+__INST_DIR="${ECEL_DIR//\/\\//\}"
+sed -i -e "s/__INSTALLATION_DIRECTORY__/DIR=${__INST_DIR}/" ECELService.sh
+
+# Turn ecel_service into an executable
+chmod 755 ecel_service.py
+
+# Copy ECELservice.sh to /etc/init.d
+cp ECELservice.sh /etc/init.d
+
+# Adds symbolic links to the /ect/rc?.d
+update-rc.d ECELservice.sh defaults
+
+# View the the symbolic links
+ls -l /etc/rc?.d/*ECELservice.sh
+
+# Start the ECEL Service
+/etc/init.d/ECELservice.sh start
+
+# View the ECEL Service
+/etc/init.d/ECELservice.sh status
+
 
 echo "$OUTPUT_PREFIX Installation Complete"
