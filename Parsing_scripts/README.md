@@ -16,7 +16,7 @@ HTML files will be outputted to the same folder __init__.py is located
 Run index.html to look at the human readable output page.
 
 
-##Tools
+## Tools
 Code was written in Python 3.6
 
 Bootstrap/HTML was used
