@@ -33,10 +33,13 @@ def parse_sys_log_file(syslog_path):
         syslog_times = []
         syslog_contents = []
         for line in content:
-            times_str = re.sub(r'.*T', '', line) #Removes everything before the character T
-            
+            print(line)
+            times_str = re.sub(r'.*[0-9]T', '', line) #Removes everything before the character T
+            print(times_str)
             times_str = re.sub(r'-.*', '', times_str) #Removes everything before dash
+            print(times_str)
             hours_int = int(times_str[:2])
+            print(hours_int)
             hours_str = str(hours_int + 4)
             times_str = hours_str + times_str[2:]
             syslog_times.append('T' + times_str)
@@ -47,16 +50,30 @@ def parse_sys_log_file(syslog_path):
         syslog_times = [x.strip() for x in syslog_times] #remove \n
         syslog_contents = [x.strip() for x in syslog_contents] #remove \n
     return syslog_times, syslog_contents
-def parse_eceld(export_path):
-    syslog_path = export_path + '/raw/snoopy/1556984515_snoopy.txt'
+def parse_eceld(export_path): 
+    
+    import os
+    from os import listdir
+    from os.path import isfile, join
+    path_to_syslog_dir = export_path + '/raw/snoopy/'
+    onlyfiles = [f for f in listdir(path_to_syslog_dir) if isfile(join(path_to_syslog_dir, f))]
+#    syslog_path = export_path + '/raw/snoopy/1556984515_snoopy.txt'
     click_file_path = export_path + '/parsed/pykeylogger/click.JSON'
     timed_file_path = export_path + '/parsed/pykeylogger/timed.JSON'
-    key_file_path = export_path + '/parsed/pykeylogger/keypressData.JSON'
+    key_file_path = export_path + '/parsed/pykeylogger/keypressData.JSON'    
     
     click_times, click_contents = parse_json_file(click_file_path, 'Click', 'title')
     timed_times, timed_contents = parse_json_file(timed_file_path, 'Timed', 'title')
     key_times, key_contents = parse_json_file(key_file_path, 'Key', 'content')
-    sys_times, sys_contents = parse_sys_log_file(syslog_path)
+    sys_times = []
+    sys_contents = []
+    #Get all system log files
+    for file_name in onlyfiles:
+        if '.txt' in file_name:    
+            log_times, log_contents = parse_sys_log_file(path_to_syslog_dir + file_name)
+            sys_times = sys_times + log_times
+            sys_contents = sys_contents + log_contents
+    
     
     all_times = click_times + timed_times + key_times + sys_times
     all_contents = click_contents + timed_contents + key_contents + sys_contents
