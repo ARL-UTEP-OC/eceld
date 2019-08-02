@@ -1,42 +1,59 @@
 #!/usr/bin/env python
-
-import logging
-from logging.handlers import SysLogHandler
-import time
-import sys
-import os
+# saved as greeting-server.py
+import Pyro4
 from engine.engine import Engine
-from service import find_syslog, Service
+import logging
+import os
 
-class ecel_Service(Service):
-
+@Pyro4.expose
+class ECELDaemon(object):
     def __init__(self, *args, **kwargs):
-        self.collector = args[0].split('_', 3 )[-1:][0]
-        super(ecel_Service, self).__init__(*args, **kwargs)
-        self.logger.addHandler(SysLogHandler(address=find_syslog(),facility=SysLogHandler.LOG_DAEMON))
-        self.logger.setLevel(logging.INFO)
+        logging.debug("Initializing ECELDaemon()")
+        #get the engine object
+        self.engine = Engine()
+        logging.debug("Completed initializing ECELDaemon()")
 
-    def run(self):
-        print self.logger.info(self.collector)
-        engine = Engine()
-        collector = engine.get_collector(self.collector)
-        print self.logger.info(collector)
-        engine.start_collector(collector)
-        while not self.got_sigterm():
-            print self.logger.info("Running Collector...")
+    def start_collectors(self):
+        logging.debug("Instantiating start_collectors()")
+        collectors = self.engine.get_all_collectors()
+        for i, collector in enumerate(collectors):
+            if collector.name != 'manualscreenshot':
+                logging.info("Starting Collector: " + collector.name)
+                self.engine.start_collector(collector)
+        logging.debug("Completed start_collectors()")
+        return "Collectors started"
 
-        if self.got_sigterm():
-            print self.logger.info("Stopping all collectors and Exiting Program..")
-            engine.stop_collector(collector)
-            
+    def stop_collectors(self):
+        logging.debug("Instantiating stop_collectors()")
+        collectors = self.engine.get_all_collectors()
+        for i, collector in enumerate(collectors):
+            if collector.name != 'manualscreenshot':
+                logging.info("Starting Collector: " + collector.name)
+                self.engine.start_collector(collector)
+
+        logging.debug("Completed stop_collectors()")
+        return "Collectors stopped"
+
+    def export_data(self, path=None):
+        logging.debug("Instantiating export_data()")
+        if path == None or os.path.exists(path) == False:
+            logging.warning("Valid path was not provided: " + str(path) + ". Writing to /tmp/")
+            path = "/tmp/"
+        logging.debug("Exporting data to: " + str(path))
+        self.engine.export(path)
+        logging.debug("Completed export_data()")
+
+    def remove_data(self):
+        logging.debug("Instantiating remove_data()")
+        self.engine.delete_all()
+        logging.debug("Completed remove_data()")
 
 if __name__ == '__main__':
-    engine = Engine()
+    logging.getLogger().setLevel(logging.DEBUG)
+    daemon = Pyro4.Daemon()                # make a Pyro daemon
+    ns = Pyro4.locateNS()                  # find the name server
+    uri = daemon.register(ECELDaemon)   # register the greeting maker as a Pyro object
+    ns.register("ecel.service", uri)   # register the object with a name in the name server
 
-    collectors = engine.get_all_collectors()
-    for i, collector in enumerate(collectors):
-        if collector.name != 'manualscreenshot':
-            service_name = "ecel_service_"+collector.name
-            print "%s" % (collector.name)
-            service = ecel_Service(service_name, pid_dir='/tmp')
-            service.start()
+    logging.info("ECELd Engine Started")
+    daemon.requestLoop()                   # start the event loop of the server to wait for calls

@@ -32,7 +32,7 @@ fi
 ### Install dependencies
 #
 REQUIRED_PROGRAMS="openjdk-8-jdk zlib1g-dev libpng-dev libxtst-dev python-gtk2 python-tk python-psutil python-gobject python-pip python-xlib python-dpkt libappindicator3-1 gir1.2-appindicator3-0.1"
-REQUIRED_PYTHON_PACKAGES="schedule autopy netifaces service Image"
+REQUIRED_PYTHON_PACKAGES="schedule autopy netifaces service Image Pyro4"
 REQUIRED_PLUGINS="tshark"
 
 for plugin in $REQUIRED_PLUGINS; do
