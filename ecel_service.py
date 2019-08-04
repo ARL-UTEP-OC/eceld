@@ -1,9 +1,10 @@
 #!/usr/bin/env python
-# saved as greeting-server.py
 import Pyro4
 from engine.engine import Engine
 import logging
 import os
+import sys, traceback
+from subprocess import Popen
 
 @Pyro4.expose
 class ECELDaemon(object):
@@ -29,10 +30,18 @@ class ECELDaemon(object):
         for i, collector in enumerate(collectors):
             if collector.name != 'manualscreenshot':
                 logging.info("Starting Collector: " + collector.name)
-                self.engine.start_collector(collector)
+                self.engine.stop_collector(collector)
 
         logging.debug("Completed stop_collectors()")
         return "Collectors stopped"
+
+    def parse_data_all(self):
+        logging.debug("Instantiating parse_data_all()")
+        collectors = self.engine.get_all_collectors()
+        for i, collector in enumerate(collectors):
+            self.engine.parser(collector)
+        logging.debug("Completed parse_data_all()")
+
 
     def export_data(self, path=None):
         logging.debug("Instantiating export_data()")
@@ -51,6 +60,13 @@ class ECELDaemon(object):
 if __name__ == '__main__':
     logging.getLogger().setLevel(logging.DEBUG)
     daemon = Pyro4.Daemon()                # make a Pyro daemon
+    try:
+        output = Popen("pyro4-ns")
+    except:
+        logging.error("Pyro name server already running or could not be started")
+        exc_type, exc_value, exc_traceback = sys.exc_info()
+        traceback.print_exception(exc_type, exc_value, exc_traceback)
+
     ns = Pyro4.locateNS()                  # find the name server
     uri = daemon.register(ECELDaemon)   # register the greeting maker as a Pyro object
     ns.register("ecel.service", uri)   # register the object with a name in the name server
