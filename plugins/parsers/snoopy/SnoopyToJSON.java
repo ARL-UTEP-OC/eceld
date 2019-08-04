@@ -35,11 +35,11 @@ public class SnoopyToJSON{
 //check if we have another line to read
    line = br.readLine();
    while (line != null) {
-	 System.out.println("Processing line: " + line);
+	//  System.out.println("Processing line: " + line);
 	 parsedLine = line.split(" ");
 	if(parsedLine.length < 8)
 	{
-		System.out.println("CONTINUING BECAUSE LINE IS TOO SHORT");
+		System.out.println("SKIPPING LINE; TOO SHORT");
 		line = br.readLine();
 	    continue;
 	}
@@ -48,13 +48,19 @@ public class SnoopyToJSON{
      uid = parsedLine[1];//.split("uid:")[1];
      sid = parsedLine[2];//.split("sid:")[1];
      tty = parsedLine[3];//.split("tty:")[1];
+     if(tty.contains("(none)"))
+     {
+         System.out.println("SKIPPING LINE; CONTAINS TTY THAT IS 'NONE'");
+         line = br.readLine();
+         continue;
+     }
      //System.out.println("TimeStamp: " + timestamp + " uid: " + uid + " sid: " + sid + " tty: " + tty);
      //read the rest of the line as the command
      command = "";
      for(int i=6;i<parsedLine.length;i++)
 		command += parsedLine[i] + " ";
 
-     System.out.println("timestamp " + timestamp + " uid " + uid + " sid " + sid + " tty " + tty + " command " + command);
+    //  System.out.println("timestamp " + timestamp + " uid " + uid + " sid " + sid + " tty " + tty + " command " + command);
 
       answer += "\t{\"snoopy_id\" : "+(numItems++)+", ";
       answer += "\"content\" : \"";
@@ -75,12 +81,12 @@ public class SnoopyToJSON{
        answer += ",";
       answer += "\n";
   }
-  System.out.println(answer + "\n]");
+//   System.out.println(answer + "\n]");
   System.out.println("\tFinished processing snoopy data");
   br.close();
   answer += "]\n";
         FileOutput.WriteToFile(outputPath + "/snoopyData.JSON", answer);
-        System.out.println(answer);
+        // System.out.println(answer);
   }
   catch (FileNotFoundException e) {
    System.out.println("\tNo snoopy file exists.");
