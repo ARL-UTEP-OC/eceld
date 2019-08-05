@@ -2,7 +2,7 @@ import os
 import subprocess
 
 from engine.parser import Parser
-
+from engine.engine import Engine
 
 class PyKeyloggerParser(Parser):
 
@@ -20,4 +20,9 @@ class PyKeyloggerParser(Parser):
         if os.name == 'nt':
             subprocess.Popen([self.script_file, self.file_or_dir, self.parsed_folder, self.click_dir, self.timed_dir], cwd=os.path.dirname(os.path.realpath(__file__)))
         else:
-            subprocess.Popen([self.script_file, self.file_or_dir, self.parsed_folder, self.click_dir, self.timed_dir], shell=False)
+            e = Engine()
+            e.incNumParsersRunning()
+            s = subprocess.Popen([self.script_file, self.file_or_dir, self.parsed_folder, self.click_dir, self.timed_dir], shell=False)
+            (output, err) = s.communicate()
+            e.decNumParsersRunning()
+            

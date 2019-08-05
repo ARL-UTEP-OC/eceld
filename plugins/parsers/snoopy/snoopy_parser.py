@@ -2,7 +2,7 @@ import os
 import subprocess
 
 from engine.parser import Parser
-
+from engine.engine import Engine
 
 class SnoopyParser(Parser):
     type = "parsers.Snoopy"
@@ -29,4 +29,7 @@ class SnoopyParser(Parser):
                 cwd=os.path.dirname(os.path.realpath(__file__)),
                 stdout=subprocess.PIPE, shell=True, stderr=subprocess.PIPE)
         else:
-            subprocess.call([self.script_file, self.file_or_dir, self.parsed_folder], shell=False)
+            e = Engine()
+            e.incNumParsersRunning()
+            s = subprocess.check_call([self.script_file, self.file_or_dir, self.parsed_folder], shell=False)
+            e.decNumParsersRunning()

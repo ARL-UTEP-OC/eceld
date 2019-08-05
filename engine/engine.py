@@ -18,6 +18,7 @@ from collector import CollectorConfig, Collector
 #TODO: get rid of all the print statements, provide result objects if required back to the client
 #TODO: Handle sigterm correctly, background running thread gets stuck.  Need to use terminate() before quit() or CRTL-C
 class Engine(object):
+    NUM_PARSER_RUNNING = 0
     def __init__(self):
         self.logger = logging.getLogger('ECEL.engine_logger')
         self.logger.info("ENGINE Logger")
@@ -55,13 +56,11 @@ class Engine(object):
         remove_cmd = os.path.join(os.path.join(os.getcwd(), "scripts"), delete_script)
         subprocess.call(remove_cmd)  # TODO: Change this to not call external script
 
-
     def stop_all_collectors(self):
         for collector in self.collectors:
             if collector.is_enabled():
                 self.logger.info("Stopping: " + collector.name)
                 collector.terminate()
-
 
     #TODO: TEST, method from main_gui.py
     def parse_all_collectors_data(self):
@@ -74,6 +73,18 @@ class Engine(object):
     def parser(self, collector):
         self.logger.info("Parsing " + collector.name)
         collector.parser.parse()
+    
+    def parsersRunning(self):
+        if Engine.NUM_PARSER_RUNNING > 0:
+            return True
+        else:
+            return False
+
+    def incNumParsersRunning(self):
+        Engine.NUM_PARSER_RUNNING+=1
+        
+    def decNumParsersRunning(self):
+        Engine.NUM_PARSER_RUNNING-=1
 
     #TODO: TEST, method from main_gui.py
     def start_collector(self, collector):
@@ -93,7 +104,7 @@ class Engine(object):
         collector.terminate()
 
     def export(self, export_base_dir, compress_export_format= 'zip', export_raw= True,
-    export_compressed= True, export_parsed= True, compress_export =True):
+    export_compressed= False, export_parsed= True, compress_export =False):
 
         if export_base_dir == '':
             #print "Please select a directory to export to."

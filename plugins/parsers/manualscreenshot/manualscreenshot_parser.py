@@ -2,6 +2,7 @@ import os
 import subprocess
 
 from engine.parser import Parser
+from engine.engine import Engine
 
 
 class ManualScreenShotParser(Parser):
@@ -21,4 +22,8 @@ class ManualScreenShotParser(Parser):
         if(os.name == "nt"):
             subprocess.Popen([self.script_file, self.click_dir, self.parsed_folder], cwd=os.path.dirname(os.path.realpath(__file__)))
         else:
-            subprocess.Popen([self.script_file, self.click_dir, self.parsed_folder],shell=False)
+            e = Engine()
+            e.incNumParsersRunning()
+            s = subprocess.Popen([self.script_file, self.click_dir, self.parsed_folder],shell=False)
+            (out, err) = s.communicate()
+            e.decNumParsersRunning()

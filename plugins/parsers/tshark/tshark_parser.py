@@ -4,6 +4,7 @@ from gi.repository import GObject
 from engine.parser import Parser
 import fcntl
 import definitions
+from engine.engine import Engine
 
 class TSharkParser(Parser):
     type = "parsers.TShark"
@@ -21,4 +22,7 @@ class TSharkParser(Parser):
             subprocess.Popen(
                 [self.script_file, self.file_or_dir, self.parsed_folder],cwd=os.path.dirname(os.path.realpath(__file__)))
         else:
-            subprocess.call([self.script_file, self.file_or_dir, self.parsed_folder], shell=False)
+            e = Engine()
+            e.incNumParsersRunning()
+            s = subprocess.check_call([self.script_file, self.file_or_dir, self.parsed_folder], shell=False)
+            e.decNumParsersRunning()

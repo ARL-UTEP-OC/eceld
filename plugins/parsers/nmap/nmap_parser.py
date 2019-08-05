@@ -2,6 +2,7 @@ import os
 import subprocess
 import definitions
 from engine.parser import Parser
+from engine.engine import Engine
 
 class NMapParser(Parser):
     type = "parsers.NMap"
@@ -17,4 +18,8 @@ class NMapParser(Parser):
         if os.name == 'nt':
             subprocess.Popen([self.script_file, self.file_or_dir, self.parsed_folder, definitions.ROOT_DIR], cwd=os.path.dirname(os.path.realpath(__file__)))
         else:
-            subprocess.call([self.script_file, self.file_or_dir, self.parsed_folder], shell=False)
+            pass
+            #e = Engine()
+            #e.incNumParsersRunning()
+            #s = subprocess.check_call([self.script_file, self.file_or_dir, self.parsed_folder], shell=False)
+            #e.decNumParsersRunning()

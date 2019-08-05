@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import Pyro4
 from engine.engine import Engine
+
 import logging
 import os
 import sys, traceback
@@ -39,9 +40,12 @@ class ECELDaemon(object):
         logging.debug("Instantiating parse_data_all()")
         collectors = self.engine.get_all_collectors()
         for i, collector in enumerate(collectors):
+            logging.error("PARSER: " + str(collector.name))
             self.engine.parser(collector)
         logging.debug("Completed parse_data_all()")
 
+    def is_parser_running(self):
+        return self.engine.parsersRunning()
 
     def export_data(self, path=None):
         logging.debug("Instantiating export_data()")
