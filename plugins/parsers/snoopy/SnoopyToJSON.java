@@ -31,13 +31,14 @@ public class SnoopyToJSON{
    String command;
    String loggerType;
    String temp;
+   long lineNum = 0;
 
 //check if we have another line to read
    line = br.readLine();
    while (line != null) {
 	//  System.out.println("Processing line: " + line);
 	 parsedLine = line.split(" ");
-	if(parsedLine.length < 8)
+	if(parsedLine.length < 7)
 	{
 		System.out.println("SKIPPING LINE; TOO SHORT");
 		line = br.readLine();
@@ -61,7 +62,11 @@ public class SnoopyToJSON{
 		command += parsedLine[i] + " ";
 
     //  System.out.println("timestamp " + timestamp + " uid " + uid + " sid " + sid + " tty " + tty + " command " + command);
-
+      if (lineNum++ > 0)
+      {
+        answer += ",";
+        answer += "\n";
+      }  
       answer += "\t{\"snoopy_id\" : "+(numItems++)+", ";
       answer += "\"content\" : \"";
       answer += quote(command);
@@ -77,14 +82,14 @@ public class SnoopyToJSON{
       answer += "}";
 
 	  line = br.readLine();
-      if(line != null)
-       answer += ",";
-      answer += "\n";
+    //   if(line != null)
+    //    answer += ",";
+    //   answer += "\n";
   }
 //   System.out.println(answer + "\n]");
   System.out.println("\tFinished processing snoopy data");
   br.close();
-  answer += "]\n";
+  answer += "\n]\n";
         FileOutput.WriteToFile(outputPath + "/snoopyData.JSON", answer);
         // System.out.println(answer);
   }
