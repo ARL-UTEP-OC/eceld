@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import Pyro4
 from engine.engine import Engine
-
+import time
 import logging
 import os
 import sys, traceback
@@ -66,6 +66,7 @@ if __name__ == '__main__':
     daemon = Pyro4.Daemon()                # make a Pyro daemon
     try:
         output = Popen("pyro4-ns")
+        time.sleep(8)
     except:
         logging.error("Pyro name server already running or could not be started")
         exc_type, exc_value, exc_traceback = sys.exc_info()
