@@ -27,11 +27,12 @@ class ECELDaemon(object):
 
     def stop_collectors(self):
         logging.debug("Instantiating stop_collectors()")
-        collectors = self.engine.get_all_collectors()
-        for i, collector in enumerate(collectors):
-            if collector.name != 'manualscreenshot':
-                logging.info("Starting Collector: " + collector.name)
-                self.engine.stop_collector(collector)
+        #collectors = self.engine.get_all_collectors()
+        #for i, collector in enumerate(collectors):
+        #    if collector.name != 'manualscreenshot':
+        #        logging.info("Starting Collector: " + collector.name)
+        #        self.engine.stop_collector(collector)
+        self.engine.stop_all_collectors()
 
         logging.debug("Completed stop_collectors()")
         return "Collectors stopped"
@@ -63,6 +64,7 @@ class ECELDaemon(object):
 
 if __name__ == '__main__':
     logging.getLogger().setLevel(logging.DEBUG)
+    os.chdir(os.path.dirname(sys.argv[0]))
     daemon = Pyro4.Daemon()                # make a Pyro daemon
     try:
         output = Popen("pyro4-ns")
