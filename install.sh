@@ -125,10 +125,10 @@ if [ ! -d "$AUTOSTART_DIR" ]; then
 fi
 cat > "$ECEL_DIR"/scripts/ecel.desktop << EOF
 [Desktop Entry]
-Name=ECEL
+Name=ECELd
 GenericName=
-Comment=Evaluator Centric and Extensible Logger
-Exec=$ECEL_DIR/ecel-gui
+Comment=Evaluator Centric and Extensible Logger (daemon)
+Exec=$ECEL_DIR/eceld_service.py
 Terminal=false
 Type=Application
 X-GNOME-Autostart-enabled=${AUTOSTART_ENABLED_VAL}
