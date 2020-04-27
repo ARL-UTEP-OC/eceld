@@ -1,1 +1,5 @@
 *.pyc
+*.class
+ecel-gui
+
+*/raw/*
