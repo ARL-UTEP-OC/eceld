@@ -1,8 +1,0 @@
-[Desktop Entry]
-Name=ECEL
-GenericName=
-Comment=Evaluator Centric and Extensible Logger
-Exec=/root/Documents/ecel/ecel-gui
-Terminal=false
-Type=Application
-X-GNOME-Autostart-enabled=true

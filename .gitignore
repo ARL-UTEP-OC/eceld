@@ -1,5 +1,12 @@
+plugins/collectors/nmap/raw/*
+plugins/collectors/nmap/parsed/*
+plugins/collectors/pykeylogger/raw/*
+plugins/collectors/pykeylogger/parsed/*
+plugins/collectors/snoopy/raw/*
+plugins/collectors/snoopy/parsed/*
+plugins/collectors/snoopy/snoopy_install/snoopy-2.4.6_mod/*
+plugins/collectors/tshark/raw/*
+plugins/collectors/tshark/parsed/*
+
 *.pyc
 *.class
-ecel-gui
-
-*/raw/*

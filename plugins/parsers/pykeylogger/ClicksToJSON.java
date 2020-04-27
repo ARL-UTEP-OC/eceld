@@ -38,10 +38,9 @@ public class ClicksToJSON {
 						continue;
 					//unescape characters for use by html
 					answer += "\t{\"clicks_id\" : "+(numItems++)+",\n";
-					answer += "\t\"content\" : \" \",\n";
+					answer += "\t\"content\" : \""+quote(child.getPath())+"\",\n";
 					answer += "\t\"type\" : \"point\",\n";
 					answer += "\t\"classname\" : \"imgPoint\",\n";
-					answer += "\t\"title\" : \""+quote(child.getAbsolutePath())+"\",\n";
 					answer += "\t\"start\" : \"" + timestamp + "\"\n";
 					answer += "\t}"+ (i==directoryListing.length-1?"\n":",\n\n");
 				}
