@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import Pyro4
 from engine.engine import Engine
 import time

@@ -10,7 +10,7 @@ import logging
 from abc import ABCMeta, abstractmethod
 from threading import Thread, Event
 from collections import OrderedDict
-from archiver.archiver import Archiver
+from engine.archiver.archiver import Archiver
 
 
 class Collector(object):
@@ -36,21 +36,21 @@ class Collector(object):
     factory = staticmethod(factory)
 
     def __init__(self, collector_config):
+        self.logger = logging.getLogger('ECEL.collector')
+        self.logger.info("Collector")
 
         self.config = collector_config
         self.name = self.config.get_collector_name()
-
         self.base_dir = os.path.join(definitions.PLUGIN_COLLECTORS_DIR, self.config.foldername)
         self.output_dir = os.path.join(self.base_dir, definitions.PLUGIN_COLLECTORS_OUTPUT_DIRNAME)
         self.parsed_dir = os.path.join(self.base_dir, definitions.PLUGIN_COLLECTORS_PARSED_DIRNAME)
         self.output_metadata_dir = os.path.join(self.output_dir, definitions.PLUGIN_COLLECTORS_METADATA_DIRNAME)
 	
-	if not os.path.exists(self.output_dir):
+        if not os.path.exists(self.output_dir):
             os.mkdir(self.output_dir)
 
-	if not os.path.exists(self.parsed_dir):
+        if not os.path.exists(self.parsed_dir):
             os.mkdir(self.parsed_dir)
-
 
         self.devnull = open(os.devnull,'w')
 
@@ -81,10 +81,7 @@ class Collector(object):
     def run(self):
         if self.is_running():
             return
-
-        print (" --> Running %s" % self.name)
         self.logger.info(" --> Running %s" % self.name)
-
 
         self.build_commands()
         self.start_time = str(int(time.time()))
@@ -98,7 +95,6 @@ class Collector(object):
             self.run_command(command)
 
         if self.processes:
-            print (" [x] Started: %s - pId(s): %s" % (self.name, ', '.join(str(p.pid) for p in self.processes)))
             self.logger.info(" [x] Started: %s - pId(s): %s" % (self.name, ', '.join(str(p.pid) for p in self.processes)))
 
     def run_command(self, command):
@@ -111,8 +107,8 @@ class Collector(object):
                                        stdout=self.devnull,
                                        stderr=self.devnull)
         except OSError as err:
-            print "Error attempting to run command in collector: %s | command: %s\n" % (self.name, command)
-            print "System Error:", err
+            self.logger.error("Error attempting to run command in collector: %s | command: %s\n" % (self.name, command))
+            self.logger.error("System Error:" + str(err))
         else:
             self.processes.append(process)
             self.pid_commands[process.pid] = command
@@ -127,7 +123,8 @@ class Collector(object):
         self.metadata_filepath = os.path.join(self.output_metadata_dir, metadata_filename)
 
         metadata_file = open(self.metadata_filepath, "a")
-        os.chmod(self.metadata_filepath, 0755) #TODO: What's this for?
+        # set file to executable
+        os.chmod(self.metadata_filepath, 0o755) 
 
         metadata_file.write(self.name + "\n")
         metadata_file.write("===============================\n")
@@ -139,7 +136,7 @@ class Collector(object):
 
     def terminate(self):
         if not self.is_running():
-            print ("  ...%s processes already dead" % self.name)
+            self.logger.warning("  ...%s processes already dead" % self.name)
             return
 
         tps = []
@@ -152,10 +149,10 @@ class Collector(object):
                         child.terminate()
                     parent.terminate()
                 except Exception as e:
-                    print (" !! %s: %s" % (self.name, e))
+                    self.logger.error(" !! %s: %s" % (self.name, e))
                 else:
                     tps.append(process.pid)
-        print (" [x] Terminated: %s - pId(s): %s" % (self.name, ', '.join(str(p) for p in tps)))
+        self.logger.info(" [x] Terminated: %s - pId(s): %s" % (self.name, ', '.join(str(p) for p in tps)))
         self.clean()
 
     def clean(self):
@@ -193,7 +190,7 @@ class AutomaticCollector(Collector):
 
         self.compressed_dir = os.path.join(self.base_dir, definitions.PLUGIN_COLLECTORS_COMPRESSED_DIRNAME)
 
-	if not os.path.exists(self.compressed_dir):
+        if not os.path.exists(self.compressed_dir):
             os.mkdir(self.compressed_dir)
 
         self.commands = []
@@ -213,7 +210,7 @@ class AutomaticCollector(Collector):
         if self.is_running():
             return
 
-        print (" --> Running %s" % self.name)
+        self.logger.info(" --> Running %s" % self.name)
 
         self.build_commands()
         self.start_time = str(int(time.time()))
@@ -242,17 +239,17 @@ class AutomaticCollector(Collector):
                                        stderr=self.devnull)
 
         except OSError as err:
-            print "Error attempting to run command in collector: %s | command: %s\n" % (self.name, command)
-            print "System Error:", err
+            self.logger.error("Error attempting to run command in collector: %s | command: %s\n" % (self.name, command))
+            self.logger.error("System Error:" + str(err))
         else:
             self.processes.append(process)
             self.pid_commands[process.pid] = command
-            print("[x] Started: %s -pID(s): %s" % (self.name,str(process.pid)))
+            self.logger.info("[x] Started: %s -pID(s): %s" % (self.name,str(process.pid)))
 
 
     def terminate(self):
         if not self.is_running():
-            print ("  ...%s processes already dead" % self.name)
+            self.logger.info("  ...%s processes already dead" % self.name)
             return
 
         tps = []
@@ -265,10 +262,10 @@ class AutomaticCollector(Collector):
                         child.terminate()
                     parent.terminate()
                 except Exception as e:
-                    print (" !! %s: %s" % (self.name, e))
+                    self.logger.info(" !! %s: %s" % (self.name, e))
                 else:
                     tps.append(process.pid)
-        print (" [x] Terminated: %s - pId(s): %s" % (self.name, ', '.join(str(p) for p in tps)))
+        self.logger.info(" [x] Terminated: %s - pId(s): %s" % (self.name, ', '.join(str(p) for p in tps)))
 
         self.commands = []
         self.output_filenames = []
@@ -394,7 +391,7 @@ class CollectorConfig():
 
     def __sum_keys(self, d):
         return (0 if not isinstance(d, dict)
-                else len(d) + sum(self.__sum_keys(v) for v in d.itervalues()))
+                else len(d) + sum(self.__sum_keys(v) for v in d.values()))
 
     def set_configs_data_field(self, trace, value):
         indexes = ""

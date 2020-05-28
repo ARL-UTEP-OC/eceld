@@ -34,7 +34,7 @@ if os.name == 'posix':
 elif os.name == 'nt':
     import win32api, win32con, win32process
 else:
-    print "OS is not recognised as windows or linux"
+    self.logger.error("OS is not recognised as windows or linux")
     sys.exit()
 
 from baseeventclasses import *

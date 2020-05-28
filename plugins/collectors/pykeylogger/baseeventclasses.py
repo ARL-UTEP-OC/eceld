@@ -82,7 +82,7 @@ class BaseEventClass(Thread):
     def task_function(self): # to be overridden in derived classes.
         try:
             event = self.q.get(timeout=0.05)
-            print event
+            self.logger.info(event)
         except Empty:
             pass #let's keep iterating
         except:

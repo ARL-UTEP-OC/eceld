@@ -29,7 +29,7 @@ class Parser(object):
             self.__parse_file(self.file_or_dir)
 
     def do_file(self, file_path):
-        print ""
+        pass
 
     def __parse_file(self, file_path):
         if self.__meets_post_conditions(file_path):

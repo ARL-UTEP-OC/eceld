@@ -30,7 +30,7 @@ elif os.name == 'nt':
     import pyHook as hooklib
     import pythoncom
 else:
-    print "OS is not recognised as windows or linux."
+    self.logger.error("OS is not recognised as windows or linux.")
     exit()
 
 #import imp # don't need this anymore?

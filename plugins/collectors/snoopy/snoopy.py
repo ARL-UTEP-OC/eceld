@@ -16,8 +16,8 @@ class snoopy(AutomaticCollector):
                              stderr=self.devnull)
 
         except OSError as err:
-            print "Error attempting to run command in collector: %s | command: %s\n" % (self.name, command)
-            print "System Error:", err
+            self.logger.error("Error attempting to run command in collector: %s | command: %s\n" % (self.name, command))
+            self.logger.error("System Error:" + str(err))
 
     def build_commands(self):
         # get additional options from config.json

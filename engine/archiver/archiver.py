@@ -2,8 +2,9 @@ from threading import Timer, Thread, Event
 import os
 import time
 import shutil
-from tar_format import tar, untar
-from zip_format import zip, unzip
+import logging
+from engine.archiver.tar_format import tar, untar
+from engine.archiver.zip_format import zip, unzip
 
 __all__ = ['Archiver']
 DEST_DIR = "compressed"
@@ -19,6 +20,9 @@ class Archiver():
         - logSource: the path location where the data to compress is located (path location). """
 
     def __init__(self, collector):
+        self.logger = logging.getLogger('ECEL.archiver')
+        self.logger.info("Archiver")
+
         self.collector = collector
         self.fileFormat = collector.config.get_collector_archiving_file_format()
         self.archiverTimeInterval = collector.config.get_collector_archiving_time_interval()
@@ -102,13 +106,13 @@ class Archiver():
                 elif self.fileFormat == "tar":
                     tar(self.raw_dir, self.compressed_dir)
                 else:
-                    print ("   Invalid file format given: %s (compression will continue with zip)" % self.fileFormat)
+                    self.logger.warning ("   Invalid file format given: %s (compression will continue with zip)" % self.fileFormat)
                     zip(self.raw_dir, self.compressed_dir)
 
                 self.delDirContents(self.raw_dir)
 
                 if doPluginInterrupt:
-                    print(" [Archiver starting: %s]" % self.collector.name)
+                    self.logger.info(" [Archiver starting: %s]" % self.collector.name)
                     self.collector.run()
 
                 self.resume()
@@ -148,7 +152,7 @@ class Archiver():
                     elif os.path.isdir(path):
                         shutil.rmtree(path, ignore_errors=True)
                 except Exception as e:
-                    print (e)
+                    self.logger.error(e)
 
     def append_to_metafile(self):
         epoch_time = str(int(time.time()))
@@ -166,7 +170,7 @@ class Archiver():
                 metafile.write("probed size     = " + str(self.currentFileSize) + "\n")
                 metafile.write("file format      = " + str(self.fileFormat) + "\n")
                 metafile.close()
-        except IOError, e:
+        except Exception:
             pass #TODO: Fix this
 
     def start(self):
@@ -202,16 +206,15 @@ class Archiver():
 
     def printDebugInfo(self, callerKey):
         # Debug info:
-        if DEBUG:
-            print ("------------------------------------------------------------------")
-            print ("Archiver DEBUG info, from %s"% callerKey)
-            print ("    File Format: %s" % self.fileFormat)
-            # print ("    Archiver Size: %s" % self.archiverSize)
-            # print ("    Size Check Period: %s" % self.sizeCheckPeriod)
-            print ("    Archiver TImer Interval: %s" % self.archiverTimeInterval)
-            print ("    Log Source: %s" % self.raw_dir)
-            print ("    Log Destination: %s" % self.compressed_dir)
-            print ("------------------------------------------------------------------")
+        self.logger.debug ("------------------------------------------------------------------")
+        self.logger.debug ("Archiver DEBUG info, from %s"% callerKey)
+        self.logger.debug ("    File Format: %s" % self.fileFormat)
+        # self.logger.debug ("    Archiver Size: %s" % self.archiverSize)
+        # self.logger.debug ("    Size Check Period: %s" % self.sizeCheckPeriod)
+        self.logger.debug ("    Archiver TImer Interval: %s" % self.archiverTimeInterval)
+        self.logger.debug ("    Log Source: %s" % self.raw_dir)
+        self.logger.debug ("    Log Destination: %s" % self.compressed_dir)
+        self.logger.debug ("------------------------------------------------------------------")
 
 # TODO Source file might need to be rotated in order to compress. Then, raw duplicate data is deleted afterwards.
 

@@ -2,6 +2,7 @@
 
 import subprocess
 import shlex
+import logging
 
 #executes system command
 #takes shell command to execute as input
@@ -11,9 +12,9 @@ def execCommand(cmd):
         process = subprocess.check_call(runcmd)
         
     except subprocess.CalledProcessError as err:
-        print "Error attempting to run command : %s\n" % (cmd)
-        print "System Error:", err
+        logging.error("Error attempting to run command : %s\n" % (cmd))
+        logging.error("System Error:" + str(err))
         
     except OSError as err:
-            print "OSError attempting to run command : %s\n" % (cmd)
-            print "System Error:", err
+        logging.error("Error attempting to run command : %s\n" % (cmd))
+        logging.error("System Error:" + str(err))

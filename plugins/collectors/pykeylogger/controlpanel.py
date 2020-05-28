@@ -277,7 +277,6 @@ class ConfigPanel():
         self.execute('Cancel')
     
     def execute(self, button):
-        #print 'You clicked on', result
         if button in ('OK','Apply'):
             validation_passed = self.validate()
             if validation_passed:
