@@ -1,6 +1,5 @@
 import os
 import subprocess
-from gi.repository import GObject
 from engine.parser import Parser
 import fcntl
 import definitions
