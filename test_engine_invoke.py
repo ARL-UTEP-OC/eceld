@@ -5,11 +5,11 @@ from engine.engine import Engine
 import os
 
 
-TSHARK_DIR = '/home/researchdev/Desktop/tshark'
-PYKEYLOGGER_DIR = '/home/researchdev/Desktop/pykeylogger'
-NMAP_DIR = '/home/researchdev/Desktop/nmap'
-MANUAL_DIR = '/home/researchdev/Desktop/manuals'
-SNOOPY_DIR = '/home/researchdev/Desktop/snoopy'
+TSHARK_DIR = '/home/kali/Desktop/tshark'
+PYKEYLOGGER_DIR = '/home/kali/Desktop/pykeylogger'
+NMAP_DIR = '/home/kali/Desktop/nmap'
+MANUAL_DIR = '/home/kali/Desktop/manuals'
+SNOOPY_DIR = '/home/kali/Desktop/snoopy'
 
 def execute_tshark_test():
     logging.getLogger().setLevel(logging.DEBUG)
@@ -24,7 +24,7 @@ def execute_tshark_test():
     c = engine.get_collector("tshark")
     logging.debug("Engine_invoker: starting collector")
     engine.start_collector(c)
-    logging.debug("Engine_invoker: waiting 5 seconds")
+    logging.debug("Engine_invoker: waiting 10 seconds")
     time.sleep(10)
     logging.debug("Engine_invoker: stopping collector")
     engine.stop_collector(c)
@@ -48,7 +48,7 @@ def execute_pykeylogger_test():
     c = engine.get_collector("pykeylogger")
     logging.debug("Engine_invoker: starting collector")
     engine.start_collector(c)
-    logging.debug("Engine_invoker: waiting 5 seconds")
+    logging.debug("Engine_invoker: waiting 10 seconds")
     time.sleep(10)
     logging.debug("Engine_invoker: stopping collector")
     engine.stop_collector(c)
@@ -72,7 +72,7 @@ def execute_nmap_test():
     c = engine.get_collector("nmap")
     logging.debug("Engine_invoker: starting collector")
     engine.start_collector(c)
-    logging.debug("Engine_invoker: waiting 5 seconds")
+    logging.debug("Engine_invoker: waiting 10 seconds")
     time.sleep(10)
     logging.debug("Engine_invoker: stopping collector")
     engine.stop_collector(c)
@@ -96,7 +96,7 @@ def execute_manualscreenshot_test():
     c = engine.get_collector("manualscreenshot")
     logging.debug("Engine_invoker: starting collector")
     engine.start_collector(c)
-    logging.debug("Engine_invoker: waiting 5 seconds")
+    logging.debug("Engine_invoker: waiting 10 seconds")
     time.sleep(10)
     logging.debug("Engine_invoker: stopping collector")
     engine.stop_collector(c)
@@ -120,7 +120,7 @@ def execute_snoopy_test():
     c = engine.get_collector("snoopy")
     logging.debug("Engine_invoker: starting collector")
     engine.start_collector(c)
-    logging.debug("Engine_invoker: waiting 5 seconds")
+    logging.debug("Engine_invoker: waiting 10 seconds")
     time.sleep(30)
     logging.debug("Engine_invoker: stopping collector")
     engine.stop_collector(c)
@@ -132,8 +132,8 @@ def execute_snoopy_test():
     logging.debug("Engine_invoker: Complete. Exiting")
 
 if __name__ == "__main__":
-    execute_tshark_test()
+    # execute_tshark_test()
     execute_pykeylogger_test()
-    execute_nmap_test()
-    execute_manualscreenshot_test()
-    execute_snoopy_test()
+    # execute_nmap_test()
+    # execute_manualscreenshot_test()
+    # execute_snoopy_test()

@@ -24,7 +24,7 @@ def tar(source, dest):
                 tarBall.add(source, arcname=os.path.basename(source))
                 tarBall.close()
     else:
-        print("   File: " + source + " Doesn't exist! tar function aborted.")
+        self.logger.info("   File: " + source + " Doesn't exist! tar function aborted.")
 
 # Decompresses all files from the source directory into the dest directory
 # - Can decompress and preserve the folder structure
@@ -60,7 +60,7 @@ def delDirContents(dir):
 
 # TODO Used for testing.
 def main(args):
-    print("")
+    self.logger.info("")
 
 if __name__ == '__main__':
     main(sys.argv)

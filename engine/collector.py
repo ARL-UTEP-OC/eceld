@@ -90,6 +90,8 @@ class Collector(object):
         if not os.path.exists(self.output_dir):
             os.mkdir(self.output_dir)
 
+        self.logger.info(" [x] Gathering Commands: %s" % (str(self.commands)))
+
         for command in self.commands:
             self.output_filenames.append(definitions.TIMESTAMP_PLACEHOLDER)
             self.run_command(command)
@@ -219,6 +221,8 @@ class AutomaticCollector(Collector):
         if not os.path.exists(self.output_dir):
             os.mkdir(self.output_dir)
 
+        self.logger.info(" [x] Gathering Commands: %s" % (str(self.commands)))
+
         for command in self.commands:
             self.output_filenames.append(definitions.TIMESTAMP_PLACEHOLDER)
             self.run_command(command)
@@ -300,10 +304,10 @@ class AutomaticCollector(Collector):
             self.outer.processes.remove(dead_process)
             del self.outer.pid_commands[dead_process.pid]
             if(self.auto_restart_enabled):
-                print("Auto restart enabled for: " + self.outer.name)
-                print("Auto restart interval: " + str(self.time_interval))
-                print("Attempting to restart...")
-            #print(" --> process %s died, attempting to restart..." % (dead_process.pid))
+                self.logger.info("Auto restart enabled for: " + self.outer.name)
+                self.logger.info("Auto restart interval: " + str(self.time_interval))
+                self.logger.info("Attempting to restart...")
+            #self.logger.info(" --> process %s died, attempting to restart..." % (dead_process.pid))
             #In the case of tshark, process restarts, but dies if interface is down; can't tell if it continues runningd
             self.outer.run_command(command)
 

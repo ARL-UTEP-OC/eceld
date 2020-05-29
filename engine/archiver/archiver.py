@@ -60,13 +60,13 @@ class Archiver():
         parsedDir = os.path.join(self.collector.base_dir, "parsed")
 
         if not os.path.exists(dest_path):
-            print("  Creating archiver destination directory: %s" % dest_path)
+            self.logger.info("  Creating archiver destination directory: %s" % dest_path)
             os.makedirs(dest_path)
         if not os.path.exists(rawDir):
-            print("  Creating raw destination directory: %s" % rawDir)
+            self.logger.info("  Creating raw destination directory: %s" % rawDir)
             os.makedirs(rawDir)
         if not os.path.exists(parsedDir):
-            print("  Creating parsed destination directory: %s" % parsedDir)
+            self.logger.info("  Creating parsed destination directory: %s" % parsedDir)
             os.makedirs(parsedDir)
         return dest_path
 
@@ -84,8 +84,8 @@ class Archiver():
     # def checkFileSize(self):
     #     self.currentFileSize = self.getSourceSize()
     #     if self.currentFileSize >= self.archiverSize:
-    #         print("   File size limit %i-B reached, compressing: %s" % (self.archiverSize, self.raw_dir))
-    #         print(" Current file size: %s " % self.currentFileSize)
+    #         self.logger.info("   File size limit %i-B reached, compressing: %s" % (self.archiverSize, self.raw_dir))
+    #         self.logger.info(" Current file size: %s " % self.currentFileSize)
     #         self.compress()
 
     #TODO: Refactor this class

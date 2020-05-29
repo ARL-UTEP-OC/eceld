@@ -20,7 +20,7 @@
       "custom": {
         "interfaces": {
           "mode": "exclusive",
-          "interfaces": "lo"
+          "interfaces": "any"
         }
       }
     }
