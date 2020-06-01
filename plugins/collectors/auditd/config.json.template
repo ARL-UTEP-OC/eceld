@@ -1,0 +1,26 @@
+{
+  "collector": {
+    "name": "auditd",
+    "type": "automatic",
+    "configurations": {
+      "general": {
+        "auto restart": {
+          "enabled": false,
+          "time interval": 1800
+        }
+      },
+      "archiving": {
+        "enabled": false,
+        "time interval": 1800,
+        "file format": "zip"
+      },
+      "parsing": {
+        "parser": "plugins.parsers.auditd.auditd_parser,auditdParser"
+      },
+      "custom": {
+        "config path": "/etc/audit/auditd.conf",
+        "rule path": "/etc/audit/rules.d/audit.rules",
+      }
+    }
+  }
+}

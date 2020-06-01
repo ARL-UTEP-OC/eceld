@@ -34,8 +34,8 @@ fi
 ### Install dependencies
 #
 REQUIRED_PROGRAMS="openjdk-8-jdk zlib1g-dev libpng-dev libxtst-dev python3-psutil python3-pip python3-xlib python3-dpkt libappindicator3-1 gir1.2-appindicator3-0.1 tcpdump"
-REQUIRED_PYTHON_PACKAGES="schedule autopy netifaces service Image Pyro4 Pillow python-xlib configobj psutil"
-REQUIRED_PLUGINS="tshark"
+REQUIRED_PYTHON_PACKAGES="schedule autopy netifaces service Image Pyro4 Pillow python-xlib configobj psutil pmw"
+REQUIRED_PLUGINS="tshark auditd"
 
 for plugin in $REQUIRED_PLUGINS; do
     plugin_prompt="$plugin is not installed. Do you wish to install it now (ECEL will still run, but the $plugin plugin(s) won't)?"
@@ -90,51 +90,6 @@ javac -cp $ECEL_DIR/plugins/parsers/nmap/java_classes/*.java
 #
 echo "$OUTPUT_PREFIX Setting file permissions"
 find ./ -name "*.sh" -exec chmod +x {}  \;
+chmod +x "$ECEL_DIR"/eceld_service.py
 
-### Creating executables
-#
-echo "$OUTPUT_PREFIX Creating executables"
-cat > "$ECEL_DIR"/ecel-gui <<-'EOFecelgui'
-	#!/bin/bash
-
-	ECEL_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-
-	if [ "$EUID" -ne 0 ]; then
-		echo "ECEL must be run as root"
-		exit 1
-	fi
-    cd "$ECEL_DIR
-    "
-EOFecelgui
-echo $PYTHON_EXEC ecel_gui.py >> "$ECEL_DIR"/ecel-gui
-chmod +x "$ECEL_DIR"/ecel-gui
-
-if prompt_accepted_Yn "The Top-Icons gnome extension will place the ECEL icon in your status bar. Install?"; then
-    bash "$ECEL_DIR"/scripts/gnome-shell-extensions-installer/gnome-shell-extension-installer 495 --restart-shell --yes
-fi
-
-### Configure to run on boot
-#
-
-AUTOSTART_DIR=~/.config/autostart/
-AUTOSTART_ENABLED_VAL=false
-
-if prompt_accepted_Yn "Would you like to run ECEL automatically on login (only works on Kali 2016.2+)?"; then
-    AUTOSTART_ENABLED_VAL=true
-    if [ ! -d "$AUTOSTART_DIR" ]; then
-		mkdir "$AUTOSTART_DIR"
-    fi
-    cat > "$ECEL_DIR"/scripts/ecel.desktop << EOF
-    [Desktop Entry]
-    Name=ECELd
-    GenericName=
-    Comment=Evaluator Centric and Extensible Logger (daemon)
-    Exec=$ECEL_DIR/eceld_service.py
-    Terminal=false
-    Type=Application
-    X-GNOME-Autostart-enabled=${AUTOSTART_ENABLED_VAL}
-EOF
-    cp "$ECEL_DIR"/scripts/ecel.desktop "$AUTOSTART_DIR"
-    chmod +x "$AUTOSTART_DIR"/ecel.desktop
-fi
 echo "$OUTPUT_PREFIX Installation Complete"
