@@ -5,11 +5,11 @@ from engine.engine import Engine
 import os
 
 
-TSHARK_DIR = '/home/kali/Desktop/tshark'
-PYKEYLOGGER_DIR = '/home/kali/Desktop/pykeylogger'
-NMAP_DIR = '/home/kali/Desktop/nmap'
-MANUAL_DIR = '/home/kali/Desktop/manuals'
-SNOOPY_DIR = '/home/kali/Desktop/snoopy'
+TSHARK_DIR = '/tmp/tshark'
+PYKEYLOGGER_DIR = '/tmp/pykeylogger'
+NMAP_DIR = '/tmp/nmap'
+MANUAL_DIR = '/tmp/manuals'
+SNOOPY_DIR = '/tmp/snoopy'
 
 def execute_tshark_test():
     logging.getLogger().setLevel(logging.DEBUG)
@@ -132,7 +132,7 @@ def execute_snoopy_test():
     logging.debug("Engine_invoker: Complete. Exiting")
 
 if __name__ == "__main__":
-    # execute_tshark_test()
+    execute_tshark_test()
     execute_pykeylogger_test()
     # execute_nmap_test()
     # execute_manualscreenshot_test()
