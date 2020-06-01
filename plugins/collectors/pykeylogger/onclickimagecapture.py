@@ -257,11 +257,7 @@ class OnClickImageCaptureSecondStage(SecondStageBaseEventClass):
     def parse_filename(self, username, process_name):
         filepattern = self.subsettings['General']['Click Image Filename']
         fileextension = self.subsettings['General']['Click Image Format']
-#JA Edit
-        #filepattern = re.sub(r'%time%',
-        #        datetime.datetime.today().strftime('%Y%m%d_%H%M%S_') + \
-        #        str(datetime.datetime.today().microsecond),
-        #        filepattern)
+
         filepattern = re.sub(r'%time%',
                 str(time.time()),
                 filepattern)

@@ -187,10 +187,7 @@ class TimedScreenshotSecondStage(SecondStageBaseEventClass):
     def parse_filename(self):
         filepattern = self.subsettings['General']['Screenshot Image Filename']
         fileextension = self.subsettings['General']['Screenshot Image Format']
-#JA edit        filepattern = re.sub(r'%time%', 
-#                datetime.datetime.today().strftime('%Y%m%d_%H%M%S_') + \
-#                str(datetime.datetime.today().microsecond), 
-#                filepattern)
+
         filepattern = re.sub(r'%time%', 
 			str(time.time()), 
             filepattern)
