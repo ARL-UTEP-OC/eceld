@@ -65,6 +65,11 @@ fi
 ### Create plugin configs
 # #TODO: do this every time it's necessary
 for plugin in "$ECEL_DIR"/plugins/collectors/*; do
+    #python3 creates temporary directories; this is in case they exist from a previous install
+    if [[ "$plugin" == *"__pycache__" ]]; then
+        continue
+    fi
+
     if [ -d "$plugin" ]; then
         if [ ! -f "$plugin"/config.json ]; then
             scp "$plugin"/config.json.template "$plugin"/config.json
