@@ -20,9 +20,8 @@
 ##
 ##############################################################################
 
-from myutils import (_settings, _cmdoptions, OnDemandRotatingFileHandler,
-    to_unicode)
-from Queue import Queue, Empty
+from myutils import _settings, _cmdoptions, OnDemandRotatingFileHandler, to_unicode
+from queue import Queue, Empty
 import os
 import os.path
 import logging
@@ -34,7 +33,7 @@ if os.name == 'posix':
 elif os.name == 'nt':
     import win32api, win32con, win32process
 else:
-    self.logger.error("OS is not recognised as windows or linux")
+    print("OS is not recognised as windows or linux")
     sys.exit()
 
 from baseeventclasses import *
@@ -47,7 +46,6 @@ class DetailedLogWriterFirstStage(FirstStageBaseEventClass):
     '''
     
     def __init__(self, *args, **kwargs):
-        
         FirstStageBaseEventClass.__init__(self, *args, **kwargs)
         
         self.task_function = self.process_event
@@ -55,14 +53,21 @@ class DetailedLogWriterFirstStage(FirstStageBaseEventClass):
     def process_event(self):
         try:
             event = self.q.get(timeout=0.05) #need the timeout so that thread terminates properly when exiting
+            print("HERE: GOT AN EVENT!: " + event.MessageName)
             if not event.MessageName.startswith('key down'):
+                print("HERE: NOT USEFUL!")
                 self.logger.debug('not a useful event')
                 return
+            print("HERE: AFTER GOT EVENT")
             process_name = self.get_process_name(event)
+            print("HERE: AFTER PROCESS NAME: " + str(process_name))
             loggable = self.needs_logging(event, process_name)  # see if the program is in the no-log list.
+            print("HERE: AFTER NEEDS LOGGING" + str(loggable))
             if not loggable:
+                print("HERE: NOT LOGGABLE!")
                 self.logger.debug("not loggable, we are outta here\n")
                 return
+            print("HERE: LET'S LOG IT KEY: " + event.Key)
             self.logger.debug("loggable, lets log it. key: %s" % \
                 to_unicode(event.Key))
             
@@ -105,6 +110,7 @@ class DetailedLogWriterFirstStage(FirstStageBaseEventClass):
                 # so we just return a nice string and don't worry about it.
                 return "noprocname"
         elif os.name == 'posix':
+            print("HERE: RETURNING PROC NAME: " + str(event.WindowProcName))
             return to_unicode(event.WindowProcName)
             
     def get_username(self):

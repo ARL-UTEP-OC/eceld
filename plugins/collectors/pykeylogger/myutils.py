@@ -66,38 +66,19 @@ def get_main_dir():
 
 def to_unicode(x):
     """Try to convert the input to utf-8."""
-    
+    # print("STARTING TO UNICODE")
     # return empty string if input is None
     if x is None:
         return ''
-    
-    # if this is not a string, let's try converting it
-    if not isinstance(x, basestring):
+    # if this is not a string, let's convert it
+    if not isinstance(x, str):
         x = str(x)
-        
-    # if this is a unicode string, encode it and return
-    if isinstance(x, unicode):
-        return x.encode('utf-8')
-    
-    # now try a bunch of likely encodings
-    encoding = locale.getpreferredencoding()
-    try:
-        ret = x.decode(encoding).encode('utf-8')
-    except UnicodeError:
-        try:
-            ret = x.decode('utf-8').encode('utf-8')
-        except UnicodeError:
-            try:
-                ret = x.decode('latin-1').encode('utf-8')
-            except UnicodeError:
-                ret = x.decode('utf-8', 'replace').encode('utf-8')
-    return ret
+    return x
 
 class VdtValueDetailError(ValidateError):
     def __init__(self, value, reason):
         ValidateError.__init__(self, "the value '%s' is unacceptable.\n"
                 "Reason: %s" % (value, reason))
-    
 
 def validate_log_filename(value):
     '''Check for logfile naming restrictions.

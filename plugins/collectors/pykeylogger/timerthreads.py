@@ -520,8 +520,8 @@ if __name__ == '__main__':
             self.task_function = self.print_hello
         
         def print_hello(self, name='bob', *args):
-            print "hello, %s" % name
-            print args
+            print("hello " + str(name))
+            print(str(args))
     
     _settings = {'settings':{'loggername':'bla'}}
     _cmdoptions = {'cmdoptions':'bla'}

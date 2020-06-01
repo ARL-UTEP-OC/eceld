@@ -20,9 +20,9 @@
 ##
 ##############################################################################
 
-from Tkinter import *
-import tkSimpleDialog
-import tkMessageBox
+from tkinter import *
+import tkinter.simpledialog
+import tkinter.messagebox
 import Pmw
 from configobj import ConfigObj, flatten_errors
 from validate import Validator
@@ -58,11 +58,11 @@ class PyKeyloggerControlPanel:
             self.close()
     
     def password_dialog(self):
-        mypassword = tkSimpleDialog.askstring("Enter Password", 
+        mypassword = tkinter.simpledialog.askstring("Enter Password", 
                                                 "Password:", show="*")
         if mypassword != myutils.password_recover(self.panelsettings['General']['Master Password']):
             if mypassword != None:
-                tkMessageBox.showerror("Incorrect Password", 
+                tkinter.messagebox.showerror("Incorrect Password", 
                                         "Incorrect Password")
             return False
         else:
@@ -73,7 +73,7 @@ class PyKeyloggerControlPanel:
         self.root.destroy()
         
     def callback(self):
-        tkMessageBox.showwarning(title="Not Implemented", 
+        tkinter.messagebox.showwarning(title="Not Implemented", 
                     message="This feature has not yet been implemented")
     
     def initiate_timer_action(self, loggername, actionname):
@@ -284,7 +284,7 @@ class ConfigPanel():
                 self.changes_flag = True
         if button not in ('Apply',):
             if self.changes_flag:
-                tkMessageBox.showinfo("Restart PyKeylogger", 
+                tkinter.messagebox.showinfo("Restart PyKeylogger", 
                         "You must restart PyKeylogger for "
                         "the new settings to take effect.", 
                         parent=self.dialog.interior())
@@ -344,7 +344,7 @@ class ConfigPanel():
                 if error == False:
                     error = 'Missing value or section.'
                 errortext.append('%s: %s' % (section_string, error))
-            tkMessageBox.showerror("Erroneous input. Please try again.", 
+            tkinter.messagebox.showerror("Erroneous input. Please try again.", 
                         '\n\n'.join(errortext), parent=self.dialog.interior())
             self.settings = self.read_settings()
             return False
@@ -359,7 +359,7 @@ class ConfigPanel():
     
 class Command:
     ''' A class we can use to avoid using the tricky "Lambda" expression.
-    "Python and Tkinter Programming" by John Grayson, introduces this
+    "Python and tkinter Programming" by John Grayson, introduces this
     idiom.
     
     Thanks to http://mail.python.org/pipermail/tutor/2001-April/004787.html

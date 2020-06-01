@@ -23,7 +23,7 @@
 from threading import Thread, Event, RLock
 from myutils import (_settings, _cmdoptions, OnDemandRotatingFileHandler,
     to_unicode)
-from Queue import Queue, Empty
+from queue import Queue, Empty
 from timerthreads import *
 import os
 import os.path
@@ -115,7 +115,7 @@ class FirstStageBaseEventClass(BaseEventClass):
         '''Make sure we have the directory where we want to log'''
         try:
             os.makedirs(logdir)
-        except OSError, detail:
+        except OSError as detail:
             if(detail.errno==17):  #if directory already exists, swallow the error
                 pass
             else:

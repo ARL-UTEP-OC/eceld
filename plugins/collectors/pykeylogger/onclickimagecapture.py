@@ -35,7 +35,7 @@
 from baseeventclasses import *
 
 
-from Queue import Queue, Empty
+from queue import Queue, Empty
 import os
 import os.path
 import logging
@@ -145,19 +145,18 @@ class OnClickImageCaptureFirstStage(FirstStageBaseEventClass):
 
                 return image_data
             except error.BadDrawable:
-                print "bad drawable when attempting to get an image!  Closed the window?"
+                print("bad drawable when attempting to get an image!  Closed the window?")
             except error.BadMatch:
-                print "bad match when attempting to get an image! probably specified an area outside the window (too big?)"
+                print("bad match when attempting to get an image! probably specified an area outside the window (too big?)")
             except error.BadValue:
-                print "getimage: bad value error - tell me about this one, I've not managed to make it happen yet"
+                print("getimage: bad value error - tell me about this one, I've not managed to make it happen yet")
             except:
-                print self.logger.debug('Error in getimage.',
-                        exc_info = True)
+                print('Error in getimage.')#,exc_info = True)
 
         if os.name == 'nt':
             image_data = ImageGrab.grab(
                 (cropbox.topleft.x, cropbox.topleft.y, cropbox.bottomright.x, cropbox.bottomright.y))
-            print "putting pixel in"
+            print("putting pixel in")
             m_x = event.Position[0]
             m_y = event.Position[1]
             for i in range(m_x - 5, m_x + 5):

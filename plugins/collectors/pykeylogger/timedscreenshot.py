@@ -22,7 +22,7 @@
 
 from myutils import (_settings, _cmdoptions, OnDemandRotatingFileHandler,
     to_unicode)
-from Queue import Queue, Empty
+from queue import Queue, Empty
 from threading import Event
 import os
 import os.path
@@ -41,7 +41,7 @@ elif os.name == 'posix':
     from Xlib.protocol import rq
     from PIL import Image
 else:
-    print "OS is not recognised as windows or linux"
+    print("OS is not recognised as windows or linux")
     sys.exit()
 
 from baseeventclasses import *
