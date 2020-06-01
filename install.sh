@@ -34,7 +34,7 @@ fi
 ### Install dependencies
 #
 REQUIRED_PROGRAMS="openjdk-8-jdk zlib1g-dev libpng-dev libxtst-dev python3-psutil python3-pip python3-xlib python3-dpkt libappindicator3-1 gir1.2-appindicator3-0.1 tcpdump"
-REQUIRED_PYTHON_PACKAGES="schedule autopy netifaces service Image Pyro4 Pillow python-xlib configobj psutil pmw"
+REQUIRED_PYTHON_PACKAGES="schedule autopy netifaces service Image Pyro4 Pillow python-xlib configobj psutil pmw jinja2"
 REQUIRED_PLUGINS="tshark auditd"
 
 for plugin in $REQUIRED_PLUGINS; do

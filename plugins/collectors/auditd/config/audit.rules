@@ -11,5 +11,5 @@
 ## Set failure mode to syslog
 -f 1
 
-auditctl -a exit,always -F arch=b64 -F -S execve -k eceld
-auditctl -a exit,always -F arch=b32 -F -S execve -k eceld
+-a exit,always -F arch=b64 -S execve -k eceld
+-a exit,always -F arch=b32 -S execve -k eceld
