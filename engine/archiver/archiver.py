@@ -130,7 +130,7 @@ class Archiver():
     #             untar(self.raw_dir, self.compressed_dir)
     #             self.delDirContents(self.compressed_dir)
     #         else:
-    #             print ("   Could not decompress plugin: %s" % self.collector.name)
+    #             print("   Could not decompress plugin: %s" % self.collector.name)
     #
     #         self.collector.start()
     #         self.resume()                       # Resume Archiver compression
