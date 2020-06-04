@@ -71,8 +71,8 @@ class auditd(AutomaticCollector):
             shutil.copy(path_to_rule, self.auditdRulePath)
         except:
             self.logger.error("Could not copy rules file")
-            exc_type, exc_value, exc_traceback = sys.exc_info()
-            traceback.print_exception(exc_type, exc_value, exc_traceback)
+            exc_type, exce_value, exc_traceback = sys.exc_info()
+            traceback.print_exception(exc_type, exce_value, exc_traceback)
 
     def terminate(self):
         #additional logic to stop auditd using the service subsystem
