@@ -33,7 +33,7 @@ fi
 
 ### Install dependencies
 #
-REQUIRED_PROGRAMS="openjdk-8-jdk zlib1g-dev libpng-dev libxtst-dev python3-psutil python3-pip python3-xlib python3-dpkt libappindicator3-1 gir1.2-appindicator3-0.1 tcpdump"
+REQUIRED_PROGRAMS="openjdk-8-jdk zlib1g-dev libpng-dev libxtst-dev python3-psutil python3-pip python3-xlib python3-dpkt tcpdump"
 REQUIRED_PYTHON_PACKAGES="schedule autopy netifaces service Image Pyro4 Pillow python-xlib configobj psutil pmw jinja2"
 REQUIRED_PLUGINS="tshark auditd"
 
@@ -58,12 +58,8 @@ echo "$OUTPUT_PREFIX Installing python dependencies"
 $PYTHON_EXEC -m pip install pip --upgrade
 $PYTHON_EXEC -m pip install $REQUIRED_PYTHON_PACKAGES
 
-if prompt_accepted_Yn "Snoopy logs all system calls. ECEL will still run without it, but the snoopy plugin will not work. Install? "; then
-    bash "$ECEL_DIR"/scripts/install-snoopy.sh
-fi
-
 ### Create plugin configs
-# #TODO: do this every time it's necessary
+#
 for plugin in "$ECEL_DIR"/plugins/collectors/*; do
     #python3 creates temporary directories; this is in case they exist from a previous install
     if [[ "$plugin" == *"__pycache__" ]]; then
