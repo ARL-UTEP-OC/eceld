@@ -22,8 +22,8 @@ public class AuditdToJSON{
    String answer = "[\n";
 
    // Field Parser variables
-   HashMap<String, String> holderSyscall = new HashMap();
-   HashMap<String, String> holderExecve = new HashMap();
+   HashMap<String, String> holderSyscall = new HashMap<String, String>();
+   HashMap<String, String> holderExecve = new HashMap<String, String>();
    String[] syscallKeyVals = null;
    String[] execveKeyVals = null;
 
