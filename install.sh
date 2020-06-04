@@ -91,6 +91,6 @@ javac -cp $ECEL_DIR/plugins/parsers/nmap/java_classes/*.java
 #
 echo "$OUTPUT_PREFIX Setting file permissions"
 find ./ -name "*.sh" -exec chmod +x {}  \;
-chmod +x "$ECEL_DIR"/eceld_service.py
-
+chmod +x "$ECEL_DIR"/eceld_service
+scp "$ECEL_DIR"/eceld_service /usr/sbin/
 echo "$OUTPUT_PREFIX Installation Complete"
