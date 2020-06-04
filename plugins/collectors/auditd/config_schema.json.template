@@ -18,19 +18,13 @@
         "parser": "text"
       },
       "custom": {
-        "interfaces": {
-          "additional options": "text",
-          "ip range": "text"
-        }
+        "config path": "filepath",
+        "rule path": "filepath"
       },
       "constraints": {
         "archiving|file format": [
           "zip",
           "tar"
-        ],
-        "custom|interfaces|mode": [
-          "inclusive",
-          "exclusive"
         ]
       }
     }

@@ -22,7 +22,7 @@
 
 from myutils import (_settings, _cmdoptions, OnDemandRotatingFileHandler,
     to_unicode)
-from Queue import Queue, Empty
+from queue import Queue, Empty
 from threading import Event
 import os
 import os.path
@@ -36,9 +36,12 @@ if os.name == 'nt':
     import win32api
     import ImageGrab
 elif os.name == 'posix':
-    import gtk
+    from Xlib import X, XK, display, error
+    from Xlib.ext import record
+    from Xlib.protocol import rq
+    from PIL import Image
 else:
-    print "OS is not recognised as windows or linux"
+    print("OS is not recognised as windows or linux")
     sys.exit()
 
 from baseeventclasses import *
@@ -57,7 +60,7 @@ class TimedScreenshotFirstStage(FirstStageBaseEventClass):
     def __init__(self, *args, **kwargs):
         
         FirstStageBaseEventClass.__init__(self, *args, **kwargs)
-        
+
         self.task_function = self.process_event
             
     def process_event(self):
@@ -86,6 +89,10 @@ class TimedScreenshotSecondStage(SecondStageBaseEventClass):
         self.logger = logging.getLogger(self.loggername)
         
         self.sleep_counter = 0
+
+        # Hook to our display.
+        if os.name == 'posix':
+            self.local_dpy = display.Display()
                     
     def process_event(self):
         try:
@@ -102,6 +109,7 @@ class TimedScreenshotSecondStage(SecondStageBaseEventClass):
                                 self.settings['General']['Log Directory'],
                                 self.subsettings['General']['Log Subdirectory'],
                                 self.parse_filename())
+                        self.logger.error("SNAP: " + str(savefilename))
                         self.capture_image(savefilename)
                     finally:
                         self.q.clear()
@@ -113,52 +121,65 @@ class TimedScreenshotSecondStage(SecondStageBaseEventClass):
             pass #let's keep iterating
 
     def capture_image(self, savefilename):
-        
-        screensize = self.get_screen_size()
+        try:
+            screensize = self.get_screen_size()
 
-        # The cropbox will take care of making sure our image is within
-        # screen boundaries.
-        cropbox = CropBox(topleft=Point(0,0),
-                          bottomright=screensize,
-                          min=Point(0,0),
-                          max=screensize)
-        
-        self.logger.debug(cropbox)
+            # The cropbox will take care of making sure our image is within
+            # screen boundaries.
+            cropbox = CropBox(topleft=Point(0,0),
+                            bottomright=screensize,
+                            min=Point(0,0),
+                            max=screensize)
+            
+            self.logger.debug(cropbox)
+                    
+            if os.name == 'posix':
+                AllPlanes = 0xFFFFFFFF
+                # JA: we want to capture the entire screen
+                # we can't use PIL imagegrab because it's win/mac
+                # we can't use gtk because it's out of date
+                # so we use PIL get_image instead
+                # however, this requires xhost +  because we grab the display using xlib
+                cropbox = CropBox(topleft=Point(0,0),
+                    bottomright=screensize,
+                    min=Point(0,0),
+                    max=screensize)
+                raw = self.rootwin.get_image(cropbox.topleft.x,
+                        cropbox.topleft.y, cropbox.size.x, cropbox.size.y,
+                        X.ZPixmap, AllPlanes)
+                image_data = Image.frombytes("RGBX", (cropbox.size.x, cropbox.size.y), raw.data, "raw", "BGRX").convert("RGB")
+
+                save_options_dict = {}
+                if self.subsettings['General']['Screenshot Image Format'].lower() in ['jpg','jpeg']:
+                    self.subsettings['General']['Screenshot Image Format'] = 'jpeg'
+                    save_options_dict = {'quality':to_unicode(self.subsettings['General']['Screenshot Image Quality'])}
                 
-        if os.name == 'posix':
-            
-            screengrab = gtk.gdk.Pixbuf(
-                gtk.gdk.COLORSPACE_RGB,
-                False,
-                8,
-                screensize.x,
-                screensize.y)
-            
-            screengrab.get_from_drawable(
-                gtk.gdk.get_default_root_window(),
-                gtk.gdk.colormap_get_system(),
-                0, 0, 0, 0,
-                screensize.x,
-                screensize.y)
-            
-            save_options_dict = {}
-            if self.subsettings['General']['Screenshot Image Format'].lower() in ['jpg','jpeg']:
-                self.subsettings['General']['Screenshot Image Format'] = 'jpeg'
-                save_options_dict = {'quality':to_unicode(self.subsettings['General']['Screenshot Image Quality'])}
-            
-            screengrab.save(savefilename, 
-                    self.subsettings['General']['Screenshot Image Format'],
-                    save_options_dict)
+                image_data.save(savefilename, 
+                        self.subsettings['General']['Screenshot Image Format'])
 
-        if os.name == 'nt':
-            image_data = ImageGrab.grab((cropbox.topleft.x, cropbox.topleft.y, cropbox.bottomright.x, cropbox.bottomright.y))
-            image_data.save(savefilename, 
-                    quality=self.subsettings['General']['Screenshot Image Quality'])
+            if os.name == 'nt':
+                image_data = ImageGrab.grab((cropbox.topleft.x, cropbox.topleft.y, cropbox.bottomright.x, cropbox.bottomright.y))
+                image_data.save(savefilename, 
+                        quality=self.subsettings['General']['Screenshot Image Quality'])
+
+        except error.BadDrawable:
+            self.logger.error("bad drawable when attempting to get an image!  Closed the window?")
+        except error.BadMatch:
+            self.logger.error("bad match when attempting to get an image! probably specified an area outside the window (too big?)")
+        except error.BadValue:
+            self.logger.error("getimage: bad value error - tell me about this one, I've not managed to make it happen yet")
+        except Exception:
+            self.logger.error('Error writing image to file',
+                            exc_info=True)
 
     def get_screen_size(self):
         if os.name == 'posix':
-            return Point(gtk.gdk.screen_width(),
-                            gtk.gdk.screen_height())
+            self.rootwin = \
+               self.local_dpy.get_input_focus().focus.query_tree().root
+            if self.rootwin == 0:
+                self.rootwin = self.local_dpy.get_input_focus()
+            return Point(self.rootwin.get_geometry().width,
+                         self.rootwin.get_geometry().height)
         if os.name == 'nt':
             return Point(win32api.GetSystemMetrics(0),
                          win32api.GetSystemMetrics(1))
@@ -166,10 +187,7 @@ class TimedScreenshotSecondStage(SecondStageBaseEventClass):
     def parse_filename(self):
         filepattern = self.subsettings['General']['Screenshot Image Filename']
         fileextension = self.subsettings['General']['Screenshot Image Format']
-#JA edit        filepattern = re.sub(r'%time%', 
-#                datetime.datetime.today().strftime('%Y%m%d_%H%M%S_') + \
-#                str(datetime.datetime.today().microsecond), 
-#                filepattern)
+
         filepattern = re.sub(r'%time%', 
 			str(time.time()), 
             filepattern)

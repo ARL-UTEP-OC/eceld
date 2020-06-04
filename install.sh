@@ -6,6 +6,8 @@ ECEL_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 OUTPUT_PREFIX="ECEL INSTALLER:"
 OUTPUT_ERROR_PREFIX="$OUTPUT_PREFIX ERROR:"
 
+PYTHON_EXEC="python3"
+
 ### Helper functions
 #
 prompt_accepted_Yn() {
@@ -31,9 +33,9 @@ fi
 
 ### Install dependencies
 #
-REQUIRED_PROGRAMS="openjdk-8-jdk zlib1g-dev libpng-dev libxtst-dev python-gtk2 python-tk python-psutil python-gobject python-pip python-xlib python-dpkt libappindicator3-1 gir1.2-appindicator3-0.1"
-REQUIRED_PYTHON_PACKAGES="schedule autopy netifaces service Image Pyro4"
-REQUIRED_PLUGINS="tshark"
+REQUIRED_PROGRAMS="openjdk-8-jdk zlib1g-dev libpng-dev libxtst-dev python3-psutil python3-pip python3-xlib python3-dpkt tcpdump"
+REQUIRED_PYTHON_PACKAGES="schedule autopy netifaces service Image Pyro4 Pillow python-xlib configobj psutil pmw jinja2"
+REQUIRED_PLUGINS="tshark auditd"
 
 for plugin in $REQUIRED_PLUGINS; do
     plugin_prompt="$plugin is not installed. Do you wish to install it now (ECEL will still run, but the $plugin plugin(s) won't)?"
@@ -53,16 +55,17 @@ else
 fi
 
 echo "$OUTPUT_PREFIX Installing python dependencies"
-python -m pip install pip --upgrade
-python -m pip install $REQUIRED_PYTHON_PACKAGES
-
-if prompt_accepted_Yn "Snoopy logs all system calls. ECEL will still run without it, but the snoopy plugin will not work. Install? "; then
-    bash "$ECEL_DIR"/scripts/install-snoopy.sh
-fi
+$PYTHON_EXEC -m pip install pip --upgrade
+$PYTHON_EXEC -m pip install $REQUIRED_PYTHON_PACKAGES
 
 ### Create plugin configs
-# #TODO: do this every time it's necessary
+#
 for plugin in "$ECEL_DIR"/plugins/collectors/*; do
+    #python3 creates temporary directories; this is in case they exist from a previous install
+    if [[ "$plugin" == *"__pycache__" ]]; then
+        continue
+    fi
+
     if [ -d "$plugin" ]; then
         if [ ! -f "$plugin"/config.json ]; then
             scp "$plugin"/config.json.template "$plugin"/config.json
@@ -88,52 +91,6 @@ javac -cp $ECEL_DIR/plugins/parsers/nmap/java_classes/*.java
 #
 echo "$OUTPUT_PREFIX Setting file permissions"
 find ./ -name "*.sh" -exec chmod +x {}  \;
-
-### Creating executables
-#
-echo "$OUTPUT_PREFIX Creating executables"
-cat > "$ECEL_DIR"/ecel-gui <<-'EOFecelgui'
-	#!/bin/bash
-
-	ECEL_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-
-	if [ "$EUID" -ne 0 ]; then
-		echo "ECEL must be run as root"
-		exit 1
-	fi
-    cd "$ECEL_DIR"
-	python ecel_gui.py
-EOFecelgui
-chmod +x "$ECEL_DIR"/ecel-gui
-
-if prompt_accepted_Yn "The Top-Icons gnome extension will place the ECEL icon in your status bar. Install?"; then
-    bash "$ECEL_DIR"/scripts/gnome-shell-extensions-installer/gnome-shell-extension-installer 495 --restart-shell --yes
-fi
-
-### Configure to run on boot
-#
-
-AUTOSTART_DIR=~/.config/autostart/
-AUTOSTART_ENABLED_VAL=false
-
-if prompt_accepted_Yn "Would you like to run ECEL automatically on login (only works on Kali 2016.2+)?"; then
-    AUTOSTART_ENABLED_VAL=true
-fi
-
-if [ ! -d "$AUTOSTART_DIR" ]; then
-		mkdir "$AUTOSTART_DIR"
-fi
-cat > "$ECEL_DIR"/scripts/ecel.desktop << EOF
-[Desktop Entry]
-Name=ECELd
-GenericName=
-Comment=Evaluator Centric and Extensible Logger (daemon)
-Exec=$ECEL_DIR/eceld_service.py
-Terminal=false
-Type=Application
-X-GNOME-Autostart-enabled=${AUTOSTART_ENABLED_VAL}
-EOF
-cp "$ECEL_DIR"/scripts/ecel.desktop "$AUTOSTART_DIR"
-chmod +x "$AUTOSTART_DIR"/ecel.desktop
-
+chmod +x "$ECEL_DIR"/eceld_service
+scp "$ECEL_DIR"/eceld_service /usr/sbin/
 echo "$OUTPUT_PREFIX Installation Complete"

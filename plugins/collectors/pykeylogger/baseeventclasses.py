@@ -23,7 +23,7 @@
 from threading import Thread, Event, RLock
 from myutils import (_settings, _cmdoptions, OnDemandRotatingFileHandler,
     to_unicode)
-from Queue import Queue, Empty
+from queue import Queue, Empty
 from timerthreads import *
 import os
 import os.path
@@ -82,7 +82,7 @@ class BaseEventClass(Thread):
     def task_function(self): # to be overridden in derived classes.
         try:
             event = self.q.get(timeout=0.05)
-            print event
+            self.logger.info(event)
         except Empty:
             pass #let's keep iterating
         except:
@@ -115,7 +115,7 @@ class FirstStageBaseEventClass(BaseEventClass):
         '''Make sure we have the directory where we want to log'''
         try:
             os.makedirs(logdir)
-        except OSError, detail:
+        except OSError as detail:
             if(detail.errno==17):  #if directory already exists, swallow the error
                 pass
             else:

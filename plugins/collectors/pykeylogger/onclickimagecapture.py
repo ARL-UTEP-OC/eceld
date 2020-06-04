@@ -35,7 +35,7 @@
 from baseeventclasses import *
 
 
-from Queue import Queue, Empty
+from queue import Queue, Empty
 import os
 import os.path
 import logging
@@ -124,44 +124,39 @@ class OnClickImageCaptureFirstStage(FirstStageBaseEventClass):
         self.logger.debug(cropbox)
 	
         if os.name == 'posix':
-		
-
             AllPlanes = 0xFFFFFFFF
 		
             try:
-		
                 # cropbox.topleft.x, cropbox.topleft.y,
                 # cropbox.size.x, cropbox.size.y, self.savefilename
                 raw = self.rootwin.get_image(cropbox.topleft.x,
                         cropbox.topleft.y, cropbox.size.x, cropbox.size.y,
                         X.ZPixmap, AllPlanes)
 
-		
                 image_data = Image.frombytes("RGBX", (cropbox.size.x, cropbox.size.y), raw.data, "raw", "BGRX").convert("RGB")
                 #ADDED SECTION - AF
                 #GET ACTUAL SCREEN COORDS OF MOUSE CLICK
                 m_x = event.Position[0]
                 m_y = event.Position[1]
                 for i in range(m_x-5,m_x+5):
-					for j in range(m_y-5,m_y+5):
-							image_data.putpixel((i,j),(255,0,0))
+                    for j in range(m_y-5,m_y+5):
+                        image_data.putpixel((i,j),(255,0,0))
                 #END ADDED SECTION - AF
 
                 return image_data
             except error.BadDrawable:
-                print "bad drawable when attempting to get an image!  Closed the window?"
+                print("bad drawable when attempting to get an image!  Closed the window?")
             except error.BadMatch:
-                print "bad match when attempting to get an image! probably specified an area outside the window (too big?)"
+                print("bad match when attempting to get an image! probably specified an area outside the window (too big?)")
             except error.BadValue:
-                print "getimage: bad value error - tell me about this one, I've not managed to make it happen yet"
+                print("getimage: bad value error - tell me about this one, I've not managed to make it happen yet")
             except:
-                print self.logger.debug('Error in getimage.',
-                        exc_info = True)
+                print('Error in getimage.')#,exc_info = True)
 
         if os.name == 'nt':
             image_data = ImageGrab.grab(
                 (cropbox.topleft.x, cropbox.topleft.y, cropbox.bottomright.x, cropbox.bottomright.y))
-            print "putting pixel in"
+            print("putting pixel in")
             m_x = event.Position[0]
             m_y = event.Position[1]
             for i in range(m_x - 5, m_x + 5):
@@ -180,8 +175,6 @@ class OnClickImageCaptureFirstStage(FirstStageBaseEventClass):
         if os.name == 'nt':
             return Point(win32api.GetSystemMetrics(0),
                          win32api.GetSystemMetrics(1))
-
-    
 
     def get_process_name(self, event):
         '''Acquire the process name from the window handle for use in the log filename.
@@ -252,7 +245,6 @@ class OnClickImageCaptureSecondStage(SecondStageBaseEventClass):
                 self.settings['General']['Log Directory'],
                 self.subsettings['General']['Log Subdirectory'],
                 self.parse_filename(username, process_name))
-
             
             image_data.save(savefilename,
                 quality=self.subsettings['General']['Click Image Quality'])
@@ -265,11 +257,7 @@ class OnClickImageCaptureSecondStage(SecondStageBaseEventClass):
     def parse_filename(self, username, process_name):
         filepattern = self.subsettings['General']['Click Image Filename']
         fileextension = self.subsettings['General']['Click Image Format']
-#JA Edit
-        #filepattern = re.sub(r'%time%',
-        #        datetime.datetime.today().strftime('%Y%m%d_%H%M%S_') + \
-        #        str(datetime.datetime.today().microsecond),
-        #        filepattern)
+
         filepattern = re.sub(r'%time%',
                 str(time.time()),
                 filepattern)

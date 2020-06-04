@@ -4,7 +4,7 @@
 import math
 import string
 import sys
-import Tkinter
+import tkinter
 
 _PI = math.pi
 _TWO_PI = _PI * 2
@@ -22,9 +22,9 @@ def getdefaultpalette(root):
     # Return the default values of all options, using the defaults
     # from a few widgets.
 
-    ckbtn = Tkinter.Checkbutton(root)
-    entry = Tkinter.Entry(root)
-    scbar = Tkinter.Scrollbar(root)
+    ckbtn = tkinter.Checkbutton(root)
+    entry = tkinter.Entry(root)
+    scbar = tkinter.Scrollbar(root)
 
     orig = {}
     orig['activeBackground'] = str(ckbtn.configure('activebackground')[4])

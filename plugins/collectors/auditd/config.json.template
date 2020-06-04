@@ -1,6 +1,6 @@
 {
   "collector": {
-    "name": "pykeylogger",
+    "name": "auditd",
     "type": "automatic",
     "configurations": {
       "general": {
@@ -10,12 +10,16 @@
         }
       },
       "archiving": {
-        "enabled": true,
+        "enabled": false,
         "time interval": 1800,
         "file format": "zip"
       },
       "parsing": {
-        "parser": "plugins.parsers.pykeylogger.pykeylogger_parser,PyKeyloggerParser"
+        "parser": "plugins.parsers.auditd.auditd_parser,auditdParser"
+      },
+      "custom": {
+        "config path": "/etc/audit/auditd.conf",
+        "rule path": "/etc/audit/rules.d/audit.rules"
       }
     }
   }

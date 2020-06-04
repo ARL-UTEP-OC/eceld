@@ -22,7 +22,7 @@ class tshark(AutomaticCollector):
             out_file_name = definitions.TIMESTAMP_PLACEHOLDER + "_" + iface
             self.output_filenames.append(out_file_name)
             out_file_path = os.path.join(self.output_dir, out_file_name + ".pcap")
-            cmd = "dumpcap " \
+            cmd = "tcpdump " \
                   + "-i " + str(iface) + " " \
                   + "-w " + str(out_file_path).replace("\\", "/")
             self.commands.append(cmd)

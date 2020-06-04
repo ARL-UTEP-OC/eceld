@@ -20,21 +20,21 @@
 ##
 ##############################################################################
 
-from Tkinter import *
+from tkinter import *
 import webbrowser
-import tkSimpleDialog
-import ScrolledText
+import tkinter.simpledialog
+import tkinter.scrolledtext
 import version
 
 BASE_SF_URL = "http://pykeylogger.sourceforge.net"
 
-class SupportScreen(tkSimpleDialog.Dialog):
+class SupportScreen(tkinter.simpledialog.Dialog):
     
     def __init__(self, parent, title = None):
-        tkSimpleDialog.Dialog.__init__(self, parent, title)
+        tkinter.simpledialog.Dialog.__init__(self, parent, title)
 
     def body(self, master):
-        self.t = ScrolledText.ScrolledText(master)
+        self.t = tkinter.scrolledtext.ScrolledText(master)
         self.t['font'] = 'arial 10'
         self.t.pack()
         self.t.tag_configure("href", foreground='blue', underline=1)
@@ -105,16 +105,16 @@ class SupportScreen(tkSimpleDialog.Dialog):
     def openHREF(self, event):
         start, end = self.t.tag_prevrange("href",
            self.t.index("@%s,%s" % (event.x, event.y)))
-        #print "Going to %s..." % t.get(start, end)
+        #print("Going to %s..." % t.get(start, end))
         webbrowser.open(self.t.get(start, end))
 
 
-class ExpirationScreen(tkSimpleDialog.Dialog):
+class ExpirationScreen(tkinter.simpledialog.Dialog):
     def __init__(self, parent, title = None):
-        tkSimpleDialog.Dialog.__init__(self, parent, title)
+        tkinter.simpledialog.Dialog.__init__(self, parent, title)
 
     def body(self, master):
-        self.t = ScrolledText.ScrolledText(master)
+        self.t = tkinter.scrolledtext.ScrolledText(master)
         self.t['font'] = 'arial 10'
         self.t.pack()
         self.t.tag_configure("href", foreground='blue', underline=1)
@@ -176,15 +176,15 @@ class ExpirationScreen(tkSimpleDialog.Dialog):
     def openHREF(self, event):
         start, end = self.t.tag_prevrange("href",
            self.t.index("@%s,%s" % (event.x, event.y)))
-        #print "Going to %s..." % t.get(start, end)
+        #print("Going to %s..." % t.get(start, end))
         webbrowser.open(self.t.get(start, end))
 
-class AboutDialog(tkSimpleDialog.Dialog):
+class AboutDialog(tkinter.simpledialog.Dialog):
     def __init__(self, parent, title = None):
-        tkSimpleDialog.Dialog.__init__(self, parent, title)
+        tkinter.simpledialog.Dialog.__init__(self, parent, title)
 
     def body(self, master):
-        self.t = ScrolledText.ScrolledText(master)
+        self.t = tkinter.scrolledtext.ScrolledText(master)
         self.t['font'] = 'arial 10'
         self.t.pack()
         self.t.tag_configure("href", foreground='blue', underline=1)

@@ -6,6 +6,7 @@ import sys
 import time
 import shutil
 import tarfile
+import logging
 
 SEPARATOR = "_"
 EXT = ".tar.bz2" # Alternate extension form is .tbz2
@@ -23,7 +24,7 @@ def tar(source, dest):
                 tarBall.add(source, arcname=os.path.basename(source))
                 tarBall.close()
     else:
-        print("   File: " + source + " Doesn't exist! tar function aborted.")
+        self.logger.info("   File: " + source + " Doesn't exist! tar function aborted.")
 
 # Decompresses all files from the source directory into the dest directory
 # - Can decompress and preserve the folder structure
@@ -39,14 +40,13 @@ def untar(source, dest):
 
                     if tarElem.isreg():
                         tarBall.extractall(path=dest)
-
-                print ("   Decompressed into: %s" % dest)
+                logging.info("   Decompressed into: %s" % dest)
                 tarBall.close()
     else:
-        print ("   Path does not exist: %s" %source)
+        logging.error("   Path does not exist: %s" %source)
 
 
-# Removes the contents inside a directory, but not the directory itself.
+# Removes the contents inside a directory, but not the directory it
 def delDirContents(dir):
     for aFile in os.listdir(dir):
         path = os.path.join(dir, aFile)
@@ -56,11 +56,11 @@ def delDirContents(dir):
             elif os.path.isdir(path):
                 shutil.rmtree(path, ignore_errors=True)
         except Exception as e:
-            print (e)
+            logging.error (e)
 
 # TODO Used for testing.
 def main(args):
-    print("")
+    self.logger.info("")
 
 if __name__ == '__main__':
     main(sys.argv)

@@ -2,7 +2,15 @@
 import logging
 import time
 from engine.engine import Engine
+import os
 
+
+TSHARK_DIR = '/tmp/tshark'
+PYKEYLOGGER_DIR = '/tmp/pykeylogger'
+NMAP_DIR = '/tmp/nmap'
+MANUAL_DIR = '/tmp/manuals'
+SNOOPY_DIR = '/tmp/snoopy'
+AUDITD_DIR = '/tmp/auditd'
 
 def execute_tshark_test():
     logging.getLogger().setLevel(logging.DEBUG)
@@ -17,14 +25,15 @@ def execute_tshark_test():
     c = engine.get_collector("tshark")
     logging.debug("Engine_invoker: starting collector")
     engine.start_collector(c)
-    logging.debug("Engine_invoker: waiting 5 seconds")
-    time.sleep(5)
+    logging.debug("Engine_invoker: waiting 10 seconds")
+    time.sleep(10)
     logging.debug("Engine_invoker: stopping collector")
     engine.stop_collector(c)
     logging.debug("Engine_invoker: parsing data")
     engine.parser(c)
     logging.debug("Engine_invoker: exporting data")
-    engine.export('/root/Desktop/')
+    os.makedirs(TSHARK_DIR, exist_ok=True)
+    engine.export(TSHARK_DIR)
     logging.debug("Engine_invoker: Complete. Exiting")
 
 def execute_pykeylogger_test():
@@ -40,14 +49,15 @@ def execute_pykeylogger_test():
     c = engine.get_collector("pykeylogger")
     logging.debug("Engine_invoker: starting collector")
     engine.start_collector(c)
-    logging.debug("Engine_invoker: waiting 5 seconds")
-    time.sleep(5)
+    logging.debug("Engine_invoker: waiting 10 seconds")
+    time.sleep(10)
     logging.debug("Engine_invoker: stopping collector")
     engine.stop_collector(c)
     logging.debug("Engine_invoker: parsing data")
     engine.parser(c)
     logging.debug("Engine_invoker: exporting data")
-    engine.export('/root/Desktop/')
+    os.makedirs(PYKEYLOGGER_DIR, exist_ok=True)
+    engine.export(PYKEYLOGGER_DIR)
     logging.debug("Engine_invoker: Complete. Exiting")
 
 def execute_nmap_test():
@@ -63,14 +73,15 @@ def execute_nmap_test():
     c = engine.get_collector("nmap")
     logging.debug("Engine_invoker: starting collector")
     engine.start_collector(c)
-    logging.debug("Engine_invoker: waiting 5 seconds")
-    time.sleep(5)
+    logging.debug("Engine_invoker: waiting 10 seconds")
+    time.sleep(10)
     logging.debug("Engine_invoker: stopping collector")
     engine.stop_collector(c)
     logging.debug("Engine_invoker: parsing data")
     engine.parser(c)
     logging.debug("Engine_invoker: exporting data")
-    engine.export('/root/Desktop/')
+    os.makedirs(NMAP_DIR, exist_ok=True)
+    engine.export(NMAP_DIR)
     logging.debug("Engine_invoker: Complete. Exiting")
 
 def execute_manualscreenshot_test():
@@ -86,14 +97,15 @@ def execute_manualscreenshot_test():
     c = engine.get_collector("manualscreenshot")
     logging.debug("Engine_invoker: starting collector")
     engine.start_collector(c)
-    logging.debug("Engine_invoker: waiting 5 seconds")
-    time.sleep(5)
+    logging.debug("Engine_invoker: waiting 10 seconds")
+    time.sleep(10)
     logging.debug("Engine_invoker: stopping collector")
     engine.stop_collector(c)
     logging.debug("Engine_invoker: parsing data")
     engine.parser(c)
     logging.debug("Engine_invoker: exporting data")
-    engine.export('/root/Desktop/')
+    os.makedirs(MANUAL_DIR, exist_ok=True)
+    engine.export(MANUAL_DIR)
     logging.debug("Engine_invoker: Complete. Exiting")
 
 def execute_snoopy_test():
@@ -109,19 +121,46 @@ def execute_snoopy_test():
     c = engine.get_collector("snoopy")
     logging.debug("Engine_invoker: starting collector")
     engine.start_collector(c)
-    logging.debug("Engine_invoker: waiting 5 seconds")
-    time.sleep(5)
+    logging.debug("Engine_invoker: waiting 10 seconds")
+    time.sleep(10)
     logging.debug("Engine_invoker: stopping collector")
     engine.stop_collector(c)
     logging.debug("Engine_invoker: parsing data")
     engine.parser(c)
     logging.debug("Engine_invoker: exporting data")
-    engine.export('/root/Desktop/')
+    os.makedirs(SNOOPY_DIR, exist_ok=True)
+    engine.export(SNOOPY_DIR)
+    logging.debug("Engine_invoker: Complete. Exiting")
+
+
+def execute_auditd_test():
+    logging.getLogger().setLevel(logging.DEBUG)
+    logging.debug("Starting Program")
+    logging.debug("Engine_invoker: getting engine instance")
+    engine = Engine()
+    logging.debug("Engine_invoker: Removing all previous data")
+    engine.delete_all()
+    logging.debug("Engine_invoker: invoking print_collector_names")
+    engine.print_collector_names()
+    logging.debug("Engine_invoker: obtaining auditd collector")
+    c = engine.get_collector("auditd")
+    logging.debug("Engine_invoker: starting collector")
+    engine.start_collector(c)
+    logging.debug("Engine_invoker: waiting 10 seconds")
+    time.sleep(30)
+    logging.debug("Engine_invoker: stopping collector")
+    engine.stop_collector(c)
+    logging.debug("Engine_invoker: parsing data")
+    engine.parser(c)
+    logging.debug("Engine_invoker: exporting data")
+    os.makedirs(AUDITD_DIR, exist_ok=True)
+    engine.export(AUDITD_DIR)
     logging.debug("Engine_invoker: Complete. Exiting")
 
 if __name__ == "__main__":
     execute_tshark_test()
     execute_pykeylogger_test()
-    execute_nmap_test()
-    #execute_manualscreenshot_test()
-    execute_snoopy_test()
+    # execute_nmap_test()
+    # execute_manualscreenshot_test()
+    # execute_snoopy_test()
+    execute_auditd_test()
