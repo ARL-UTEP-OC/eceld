@@ -229,12 +229,18 @@ public static String formatOutLine(long id, String comm, String timestamp, Simpl
     public static String hexToAscii(String hexStr) 
     {
         StringBuilder output = new StringBuilder("");
-            
-        for (int i = 0; i < hexStr.length(); i += 2) 
+        System.out.println("WORKING WITH: " + hexStr);
+	if (hexStr.length() == 1)
+	    output.append((char) Integer.parseInt(hexStr, 16));
+	else
         {
-            String str = hexStr.substring(i, i + 2);
-            output.append((char) Integer.parseInt(str, 16));
+           for (int i = 0; i < hexStr.length(); i += 2) 
+           {
+              String str = hexStr.substring(i, i + 2);
+              output.append((char) Integer.parseInt(str, 16));
+           }
         }
-    return "\"" +output.toString() + "\"";
+
+        return "\"" +output.toString() + "\"";
     }
 }
