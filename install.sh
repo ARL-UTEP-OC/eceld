@@ -33,7 +33,7 @@ fi
 
 ### Install dependencies
 #
-REQUIRED_PROGRAMS="openjdk-8-jdk zlib1g-dev libpng-dev libxtst-dev python3-psutil python3-pip python3-xlib python3-dpkt tcpdump"
+REQUIRED_PROGRAMS="openjdk-8-jdk zlib1g-dev libpng-dev libxtst-dev libgcc-9-dev python3-pip python3-xlib tcpdump python3-psutil" #python3-dpkt 
 REQUIRED_PYTHON_PACKAGES="schedule autopy netifaces service Image Pyro4 Pillow python-xlib configobj psutil pmw jinja2"
 REQUIRED_PLUGINS="tshark auditd"
 
