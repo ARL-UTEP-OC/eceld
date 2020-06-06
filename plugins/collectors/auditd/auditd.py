@@ -65,7 +65,7 @@ class auditd(AutomaticCollector):
             # save the config file to where was indicated in the plugin config
             self.auditdRulePaths = self.config.get_collector_custom_data()["rule paths"]
             for path in self.auditdRulePaths:
-                shutil.copy(path_to_rule, self.auditdRulePatha)
+                shutil.copy(path_to_rule, path)
         except:
             self.logger.error("Could not copy rules file")
             exc_type, exce_value, exc_traceback = sys.exc_info()
