@@ -19,7 +19,7 @@
       },
       "custom": {
         "config path": "filepath",
-        "rule path": "filepath"
+        "rule paths": ["filepath", "filepath"]
       },
       "constraints": {
         "archiving|file format": [
