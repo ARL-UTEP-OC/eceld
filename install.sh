@@ -38,7 +38,7 @@ REQUIRED_PYTHON_PACKAGES="schedule autopy netifaces service Image Pyro4 Pillow p
 REQUIRED_PLUGINS="tshark auditd"
 
 for plugin in $REQUIRED_PLUGINS; do
-    plugin_prompt="$plugin is not installed. Do you wish to install it now (ECEL will still run, but the $plugin plugin(s) won't)?"
+    plugin_prompt="$plugin is not installed. Install it now (ECEL will still run, but the $plugin plugin(s) won't)?"
     if ! command -v $plugin >/dev/null 2>&1 && prompt_accepted_Yn "$plugin_prompt"; then
         REQUIRED_PROGRAMS="$REQUIRED_PROGRAMS $plugin"
     fi
