@@ -25,11 +25,7 @@ class auditd(AutomaticCollector):
             self.logger.error("System Error:" + str(err))
 
     def build_commands(self):
-        # get additional options from config.json
-        self.auditdConfigPath = self.config.get_collector_custom_data()["config path"]
-        self.auditdRulePath = self.config.get_collector_custom_data()["rule path"]
         # build commands
-        #TODO: need to recreate the config file with the name of log file here
         #command to replace logfile name
         self.create_confd()
         #command to copy files to respective locations
