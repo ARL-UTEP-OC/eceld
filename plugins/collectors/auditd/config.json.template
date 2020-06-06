@@ -19,7 +19,7 @@
       },
       "custom": {
         "config path": "/etc/audit/auditd.conf",
-        "rule paths": ["/etc/audit/rules.d/audit.rules", "/etc/audit/rules.d"]
+        "rule paths": ["/etc/audit/rules.d/audit.rules", "/etc/audit/"]
       }
     }
   }
