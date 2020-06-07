@@ -63,7 +63,9 @@ public class AuditdToJSON{
     {
         comm = holderSyscall.get("comm");
         // if command is not in quotes, then we have to convert from hex to ascii
-        if (comm != null && !comm.startsWith("\""))
+        if (comm == null)
+            continue;
+        if (!comm.startsWith("\""))
         {
             comm = hexToAscii(comm);
         }
@@ -99,7 +101,9 @@ public class AuditdToJSON{
             currCountName = baseCount + Integer.toString(countInt);
             argVal = holderExecve.get(currCountName);
             //if arg value is not in quotes, then convert it from hex to ascii
-            if (argVal != null && !argVal.startsWith("\""))
+            if (argVal == null)
+                continue;
+            if (!argVal.startsWith("\""))
             {
                 argVal = hexToAscii(argVal);
             }
