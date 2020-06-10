@@ -10,9 +10,7 @@ class pykeylogger(AutomaticCollector):
         try:
             subprocess.Popen(runcmd,
                              shell=False,
-                             cwd=self.base_dir,
-                             stdout=self.devnull,
-                             stderr=self.devnull)
+                             cwd=self.base_dir)
 
         except OSError as err:
             self.logger.error("Error attempting to run command in collector: %s | command: %s\n" % (self.name, command))
