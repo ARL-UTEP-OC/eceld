@@ -6,7 +6,7 @@ ECEL has been tested on:
 * Ubuntu 16.04 LTS, 18.04 LTS, 20.04 LTS 64-bit
 
 ## Installation
-To install ECEL, run `./install.sh`. A internet connection is required for installation.
+To install ECELd, run `./install.sh`. A internet connection is required for installation.
 
 ## Execution
 1. Run `./ecel_service` to execute ECELd. 
