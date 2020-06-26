@@ -37,10 +37,9 @@ public class TimedToJSON {
 						continue;
 					//unescape characters for use by html
 					answer += "\t{\"timed_id\" : "+(numItems++)+",\n";
-					answer += "\t\"content\" : \" \",\n";
 					answer += "\t\"type\" : \"point\",\n";
 					answer += "\t\"classname\" : \"imgPoint\",\n";
-					answer += "\t\"title\" : \""+quote(child.getAbsolutePath())+"\",\n";
+					answer += "\t\"content\" : \""+quote(child.getAbsolutePath())+"\",\n";
 					answer += "\t\"start\" : \"" + timestamp + "\"\n";
 					answer += "\t}"+ (i==directoryListing.length-1?"\n":",\n\n");
 				}
