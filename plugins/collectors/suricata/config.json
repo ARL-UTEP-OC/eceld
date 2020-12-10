@@ -1,0 +1,26 @@
+{
+  "collector": {
+    "name": "suricata",
+    "type": "automatic",
+    "configurations": {
+      "general": {
+        "auto restart": {
+          "enabled": false,
+          "time interval": 1800
+        }
+      },
+      "archiving": {
+        "enabled": false,
+        "time interval": 1800,
+        "file format": "zip"
+      },
+      "parsing": {
+        "parser": "plugins.parsers.suricata.suricata_parser,suricataParser"
+      },
+      "custom": {
+        "config path": "/etc/suricata/suricata.yaml",
+        "rule paths": ["/etc/suricata/rules/suricata.rules", "/etc/suricata/"]
+      }
+    }
+  }
+}
