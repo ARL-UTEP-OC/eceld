@@ -2,7 +2,7 @@
 
 ## System Requirements
 ECEL has been tested on:
-* Kali Linux 2019.2, 2020.2 16-bit
+* Kali Linux 2019.2, 2020.2 64-bit
 * Ubuntu 16.04 LTS, 18.04 LTS, 20.04 LTS 64-bit
 
 ## Installation
