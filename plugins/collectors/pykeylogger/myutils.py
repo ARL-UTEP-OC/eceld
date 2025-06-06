@@ -25,7 +25,7 @@ import base64
 import sys
 import os
 import os.path
-import imp
+import importlib
 import locale
 from validate import ValidateError, VdtValueError
 import re
@@ -51,12 +51,21 @@ def password_obfuscate(password):
 def password_recover(password):
     return zlib.decompress(base64.b64decode(password))
 
+# unused def is_frozen_module(module_name):
+#     spec = importlib.util.find_spec(module_name)
+#     if spec is None:
+#         return False
+#     if spec.loader is not None:
+#         if isinstance(spec.loader, type(importlib.machinery.BuiltinImporter)):
+#             return True
+#     return False
+
 # the following two functions are from the py2exe wiki:
 # http://www.py2exe.org/index.cgi/HowToDetermineIfRunningFromExe
 def main_is_frozen():
     return (hasattr(sys, "frozen") or # new py2exe
-            hasattr(sys, "importers") or # old py2exe
-            imp.is_frozen("__main__")) # tools/freeze
+            hasattr(sys, "importers")) # old py2exe
+            #is_frozen_module("__main__")) # tools/freeze
 
 def get_main_dir():
     if main_is_frozen():

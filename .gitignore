@@ -6,6 +6,8 @@ plugins/collectors/tshark/raw/*
 plugins/collectors/tshark/parsed/*
 plugins/collectors/auditd/raw/*
 plugins/collectors/auditd/parsed/*
+*.JSON
+*.json
 
 *.pyc
 *.class
