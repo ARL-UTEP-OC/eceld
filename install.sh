@@ -8,6 +8,8 @@ OUTPUT_ERROR_PREFIX="$OUTPUT_PREFIX ERROR:"
 
 PYTHON_EXEC="python3"
 
+VENV_DIR="$ECEL_DIR/.eceld"
+
 ### Helper functions
 #
 prompt_accepted_Yn() {
@@ -18,12 +20,6 @@ prompt_accepted_Yn() {
     esac
 }
 
-# Updates
-#echo "Running apt-get update"
-#apt-get -y update
-#echo "Running apt-get upgrade"
-#apt-get upgrade
-
 ### Check if running as root
 #
 if [ "$EUID" -ne 0 ]; then
@@ -31,9 +27,15 @@ if [ "$EUID" -ne 0 ]; then
     exit 1
 fi
 
+# Updates
+echo "Running apt-get update"
+apt-get -y update
+#echo "Running apt-get upgrade"
+#apt-get upgrade
+
 ### Install dependencies
 #
-REQUIRED_PROGRAMS="openjdk-8-jdk zlib1g-dev libpng-dev libxtst-dev libgcc-9-dev python3-pip python3-xlib tcpdump python3-psutil" #python3-dpkt 
+REQUIRED_PROGRAMS="openjdk-11-jdk zlib1g-dev libpng-dev libxtst-dev libgcc-14-dev python3-pip python3-xlib tcpdump python3-psutil" #python3-dpkt 
 REQUIRED_PYTHON_PACKAGES="schedule autopy netifaces service Image Pyro4 Pillow python-xlib configobj psutil pmw jinja2"
 REQUIRED_PLUGINS="tshark auditd"
 
@@ -55,6 +57,14 @@ else
 fi
 
 echo "$OUTPUT_PREFIX Installing python dependencies"
+
+if [ ! -d $VENV_DIR ]; then
+    echo "$OUTPUT_PREFIX Creating python environment: $VENV_DIR"
+    $PYTHON_EXEC -m venv $VENV_DIR
+fi
+echo "$OUTPUT_PREFIX Activating python environment: $VENV_DIR"
+source $VENV_DIR/bin/activate
+
 $PYTHON_EXEC -m pip install pip --upgrade
 $PYTHON_EXEC -m pip install $REQUIRED_PYTHON_PACKAGES
 
